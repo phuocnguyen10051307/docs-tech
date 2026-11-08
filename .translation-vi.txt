@@ -1,0 +1,674 @@
+1	Kho kiến thức phát triển cá nhân sử dụng VitePress, Markdown, TypeScript và CSS tùy chỉnh. Website xuất thành file tĩnh, có tìm kiếm toàn văn tại trình duyệt và không cần backend.
+2	## Chạy trên máy cá nhân
+3	Dùng Node.js LTS còn được hỗ trợ, đáp ứng **22.12+**, cùng npm và Git. Tại thư mục gốc repository:
+4	Mở URL VitePress hiển thị (thường là `http://127.0.0.1:5173`). Dừng bằng Ctrl+C. Mở tìm kiếm bằng nút tìm kiếm hoặc Ctrl+K / Cmd+K.
+5	## Kiểm tra và build
+6	`check` kiểm tra liên kết Markdown, anchor, các mục chuẩn, ID tiêu đề trùng và đích trong danh mục. `typecheck` kiểm tra component Vue và cấu hình TypeScript. `build` kiểm tra nội dung, liên kết hỏng, kết xuất trang và tạo chỉ mục tìm kiếm. `verify` kiểm tra trang đã build, tài nguyên, anchor, truy vấn tìm kiếm (có lỗi gõ) và thành phần giao diện. `preview` phục vụ bản build tại URL được hiển thị, thường ở cổng 4173.
+7	Để kiểm tra mọi route qua HTTP, chạy `verify` với `SITE_ORIGIN=http://127.0.0.1:4173` trong terminal thứ hai khi preview đang chạy. Đặt biến môi trường theo cú pháp shell đang dùng. Kiểm tra file đã build cần đi kèm kiểm tra hiển thị và tương tác trong trình duyệt.
+8	Kết quả triển khai nằm tại **`dist/`** ở thư mục gốc. Hosting tĩnh cần phục vụ HTML và tài nguyên trong thư mục này; website đã xuất không cần Node server. Không dùng server development/preview làm dịch vụ production.
+9	Khi triển khai dưới đường dẫn như `/developer-handbook/`, đặt `DOCS_BASE` lúc build:
+10	Dùng dấu `/` ở đầu và cuối. Với Pages theo repository, tải `dist/` lên bằng quy trình triển khai file tĩnh của nhà cung cấp và dùng đường dẫn repository làm base. Preview với cùng base để kiểm tra. Triển khai tại tên miền gốc dùng mặc định `/`.
+11	## Nội dung hiện có
+12	- Sidebar, mục lục bên phải, menu di động, đường dẫn điều hướng và chế độ sáng/tối.
+13	- Trang chủ có bộ lọc cho 11 công nghệ, năm hướng dẫn dự án và tài liệu tra cứu nhanh.
+14	- Tìm kiếm tại trình duyệt từ Markdown, tô màu cú pháp và nút sao chép code.
+15	- Hướng dẫn nhập môn cho React, TypeScript, Node.js, Express, Docker và n8n.
+16	- Các trang đang biên soạn được đánh dấu rõ cho JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub.
+17	- Năm hướng dẫn dự án có cấu hình môi trường mẫu, danh sách kiểm tra, ghi chú phiên bản và nguồn chính thức; các ví dụ ứng dụng chưa kiểm thử được ghi rõ trên trang.
+18	- Mẫu tài liệu tái sử dụng cho công nghệ và dự án.
+19	## Cấu trúc thư mục
+20	## Bổ sung nội dung
+21	Sao chép `templates/technology.md` vào `docs/technologies/tool-name/index.md`, hoàn thiện các mục phù hợp và thêm công nghệ vào `docs/.vitepress/catalog.ts`. Sidebar và trang chủ dùng chung danh mục này. Với hướng dẫn dự án, sao chép `templates/project-guide.md` vào `docs/project-guides/` và thêm mục tương ứng vào danh mục.
+22	Dùng liên kết Markdown từ gốc website (`/technologies/react/`), ghi thư mục chạy lệnh, cách xác nhận kết quả và xử lý lỗi. Đặt biến mẫu trong khối `.env.example` với giá trị giả. Handbook không cần secret để hoạt động. Xem [quy ước biên soạn](docs/references/contributing.md) và [quy tắc repository](AGENTS.md).
+23	## Bộ công cụ và giới hạn kiểm tra
+24	Repository ghim VitePress **1.6.4**, Vue **3.5.45**, vue-tsc **3.3.14** và override Vite **6.4.5**. Override này nằm ngoài dải Vite 5 mà VitePress 1.x khai báo; kết quả build chỉ phản ánh repository hiện tại. Đọc [ghi chú phiên bản](docs/references/versions.md) trước khi nâng cấp hoặc thêm plugin. Trạng thái lỗ hổng phụ thuộc thời điểm kiểm tra; chạy lại `npm audit` khi cần đánh giá.
+25	Các kiểm tra xác nhận website tài liệu, chưa xác nhận từng ứng dụng trong bài hướng dẫn. Bộ kiểm tra offline không truy cập liên kết ngoài. Các trang đang biên soạn chưa có mức chi tiết như hướng dẫn đầy đủ. Cần rà soát và ghim scaffold `@latest` cũng như image n8n trước khi dùng cho dự án cần tái lập.
+26	Git đã được khởi tạo tại máy. Chạy handbook không cần remote, triển khai, hệ thống tài khoản hoặc cơ sở dữ liệu.
+27	title: Bắt đầu sử dụng
+28	version: Handbook 1.0 · Tháng 11/2026
+29	# Tra cứu kiến thức phát triển hằng ngày
+30	Dùng website khi nhớ cách làm nhưng quên câu lệnh. Bắt đầu từ tài liệu công nghệ để nắm nền tảng, hoặc theo hướng dẫn dự án để kết hợp các phần.
+31	## Chọn lộ trình
+32	| Bạn muốn… | Bắt đầu tại |
+34	| Tạo ứng dụng React có kiểu dữ liệu | [React + TypeScript + Vite](/project-guides/react-typescript-vite) |
+35	| Kết nối trình duyệt với cơ sở dữ liệu | [React + Express + PostgreSQL](/project-guides/react-express-postgresql) |
+36	| Tìm hiểu React kết xuất trên server | [Ứng dụng Next.js full stack](/project-guides/nextjs-fullstack) |
+37	| Đóng gói server để chạy nhất quán | [Đóng gói Node.js bằng Docker](/project-guides/docker-nodejs) |
+38	| Chạy quy trình tự động trên máy | [n8n với Compose](/project-guides/n8n-compose) |
+39	| Tra lệnh hoặc chẩn đoán lỗi | [Lệnh thường dùng](/references/quick-commands) · [Lỗi thường gặp](/references/common-errors) |
+40	## Trước khi bắt đầu
+41	- [ ] Cài Node.js LTS còn được hỗ trợ, đáp ứng **22.12+**, kèm npm. Scaffold mới có thể yêu cầu cao hơn; đọc cảnh báo engine.
+42	- [ ] Cài Git và trình soạn thảo code.
+43	- [ ] Với bài dùng container, cài Docker Desktop hoặc Docker Engine cùng plugin Compose v2.
+44	- [ ] Chọn thư mục cha để thực hành; tránh vô tình tạo ứng dụng bên trong ứng dụng khác.
+45	Chạy trong terminal bất kỳ:
+46	Mỗi lệnh cần hiển thị phiên bản. Bài dùng container còn yêu cầu `docker version` hiển thị cả client và server có thể kết nối.
+47	## Cách đọc câu lệnh
+48	Các khối lệnh không có ký tự `$` ở đầu để có thể sao chép trực tiếp. Comment hoặc câu đứng trước chỉ rõ thư mục chạy. Thực hiện từng dòng theo thứ tự. Chạy server dài hạn trong terminal riêng và dừng bằng **Ctrl+C**.
+49	Phần lớn lệnh dùng được trong PowerShell, terminal macOS và shell Linux. Khối **Bash** dùng cú pháp Bash; trên Windows có thể dùng WSL hoặc Git Bash. Các bước sao chép file môi trường có lệnh PowerShell tương ứng. Trong Windows PowerShell, dùng `curl.exe` khi bài yêu cầu curl, hoặc mở URL trong trình duyệt.
+50	## File môi trường
+51	Đưa `.env.example` với tên biến và giá trị giả vào Git. Sao chép thành `.env` trên máy rồi điền giá trị riêng. Loại `.env` khỏi Git. Biến có tiền tố `VITE_` hoặc `NEXT_PUBLIC_` sẽ xuất hiện ở trình duyệt: tuyệt đối không đặt thông tin đăng nhập tại đó.
+52	Các dự án phục vụ thực hành trên máy cá nhân. Production cần rà soát triển khai, phân quyền, xác thực dữ liệu, secret, backup, log và phiên bản dependency. Mỗi bài nêu các bước tiếp theo phù hợp với bộ công nghệ.
+53	## Tìm nội dung cần dùng
+54	Dùng nút tìm kiếm hoặc **Ctrl+K / Cmd+K** để tra chỉ mục được tạo tại máy. Sidebar chia nhóm công nghệ, dự án và tra cứu. Mục lục bên phải dẫn đến các phần trong bài; trên di động dùng menu mục lục.
+55	## Phạm vi nội dung và phiên bản
+56	React, TypeScript, Node.js, Express, Docker và n8n có hướng dẫn nhập môn. JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub có nội dung khởi đầu, được đánh dấu **Đang biên soạn**. Năm bài dự án có trình tự riêng; không suy ra ví dụ đã được chạy thử từ trạng thái biên soạn của trang.
+57	Xem [ghi chú phiên bản](/references/versions) để biết phiên bản giả định và phạm vi kiểm tra. Để mở rộng handbook, đọc [biên soạn tài liệu](/references/contributing).
+58	title: Kiến thức phát triển hằng ngày
+59	description: Hướng dẫn cài đặt, lệnh thường dùng và cách xử lý lỗi dành cho lập trình viên.
+60	title: Đóng gói ứng dụng Node.js bằng Docker
+61	version: Container Node 22 · npm lockfile · chạy không dùng root
+62	# Đóng gói ứng dụng Node.js bằng Docker
+63	## Mục tiêu dự án
+64	Build và chạy image cho endpoint kiểm tra sức khỏe trong [bài Node.js](/technologies/nodejs/). Giữ secret ngoài các lớp image và chạy bằng người dùng không có quyền root. Ứng dụng chỉ dùng module tích hợp của Node nên không cần biên dịch hoặc build nhiều giai đoạn.
+65	## Công nghệ sử dụng
+66	[Node.js](/technologies/nodejs/), [Docker](/technologies/docker/) và image Node dựa trên Debian slim.
+67	## Yêu cầu trước khi bắt đầu
+68	Hoàn thành bài Node.js trong thư mục `node-api` mới, gồm `src/server.js` và `package.json`. Cài Docker, kiểm tra `docker version`. Dừng tiến trình thực hành đang chiếm cổng 3000 trên máy.
+69	## Lệnh khởi tạo
+70	Tại `node-api`:
+71	Ngay cả dự án không có dependency cũng cần lockfile để dùng `npm ci`. Nếu bổ sung dependency, tạo và đưa lockfile vào Git bằng phiên bản npm đã chọn.
+72	## Cấu hình môi trường
+73	Giữ `.env.example` có `PORT=3000`. Container nhận `NODE_ENV` và `PORT` lúc chạy, không sao chép `.env`. Secret production phải đến từ nền tảng triển khai hoặc secret được mount, không đặt trong dòng `ENV` của Dockerfile.
+74	## Cấu trúc thư mục đề xuất
+75	## Các bước thực hiện
+76	### 1. Giới hạn build context
+77	Tạo `.dockerignore`:
+78	### 2. Định nghĩa image
+79	Tạo `Dockerfile`:
+80	Sao chép manifest trước source giúp Docker tái sử dụng bước cài dependency khi chỉ code ứng dụng thay đổi. `USER node` bỏ quyền root. `EXPOSE` ghi chú cổng; vẫn cần `-p` để mở cổng ra máy. Tag nền có thể được cập nhật; ghim digest đã rà soát nếu cần bản phát hành tái lập.
+81	### 3. Build và khởi chạy
+82	Chạy tại `node-api`:
+83	Dấu chấm cuối là build context. `--init` hỗ trợ chuyển tiếp signal và thu hồi tiến trình con. Ứng dụng lắng nghe trên `0.0.0.0` trong container; cổng trên máy chỉ mở tại loopback.
+84	## Chạy và kiểm tra
+85	Từ terminal bất kỳ:
+86	Trên Windows dùng `curl.exe` hoặc trình duyệt. Kết quả mong đợi là `{"status":"ok"}` và thông tin `id` của người dùng `node` không có quyền root. `docker stop` dừng server; `--rm` xóa container sau khi dừng. URL không tồn tại cần trả về 404 khi server đang chạy.
+87	Để thử cổng khác trên máy nhưng giữ nguyên cổng container:
+88	Mở `http://localhost:3001/health`; Ctrl+C dừng phiên chạy này. Khi source thay đổi, build lại image trước khi tạo container mới.
+89	## Lỗi khởi tạo thường gặp
+90	| Triệu chứng | Cách sửa |
+91	| `npm ci` yêu cầu lockfile | Tạo `package-lock.json` trước khi build |
+92	| Container chạy nhưng không mở được URL | Kiểm tra địa chỉ `0.0.0.0` và ánh xạ `-p` |
+93	| Tên container đã được dùng | Xem `docker ps -a`; dừng container thực hành trước đó |
+94	| Code mới chưa xuất hiện | Build lại image; khởi động lại không build lại các lớp |
+95	| Source TypeScript không chạy | Thêm giai đoạn biên dịch và sao chép kết quả; bài này dùng JavaScript |
+96	## Kết quả mong đợi
+97	- [ ] Build thành công từ source và lockfile.
+98	- [ ] Tiến trình không có quyền root phục vụ `/health`.
+99	- [ ] Dịch vụ chỉ truy cập được qua ánh xạ cổng dự kiến.
+100	- [ ] Dừng dịch vụ hoạt động và context không chứa `.env`.
+101	Trong production, đẩy image đã rà soát lên registry; cấu hình giám sát sức khỏe, giới hạn tài nguyên, TLS và log tại hệ thống triển khai. Nếu thêm module native, thử trên cùng kiến trúc và hệ điều hành nền với production.
+102	**Nguồn chính thức:** [Docker cho Node](https://docs.docker.com/guides/nodejs/) · [Tra cứu Dockerfile](https://docs.docker.com/reference/dockerfile/) · [Image Node chính thức](https://hub.docker.com/_/node).
+103	title: Hướng dẫn dự án
+104	version: Năm lộ trình thực hành · Handbook 1.0
+105	# Thực hành xây dựng dự án
+106	Mỗi bài bắt đầu trong thư mục mới, giải thích môi trường và kết thúc bằng các bước tự kiểm tra. Thời gian đọc và thiết lập là ước tính, chưa tính cài công cụ và tải dependency.
+107	| Hướng dẫn | Kết quả | Thời gian |
+109	| [React + TypeScript + Vite](./react-typescript-vite) | Bộ đếm có kiểu dữ liệu và bản build production | 10 phút |
+110	| [React + Express + PostgreSQL](./react-express-postgresql) | Giao diện đọc ghi chú từ cơ sở dữ liệu | 25 phút |
+111	| [Ứng dụng Next.js full stack](./nextjs-fullstack) | Trang kết xuất trên server và route JSON | 15 phút |
+112	| [Đóng gói Node.js bằng Docker](./docker-nodejs) | Container không dùng root, có endpoint kiểm tra sức khỏe | 15 phút |
+113	| [Tự chạy n8n bằng Docker Compose](./n8n-compose) | Trình biên tập workflow với dữ liệu lưu bền vững | 15 phút |
+114	## Danh sách kiểm tra chung
+115	- [ ] Chọn tên dự án và thư mục cha mới.
+116	- [ ] Kiểm tra phiên bản Node/npm hoặc Docker trước khi bắt đầu.
+117	- [ ] Sao chép `.env.example` thành file môi trường trên máy và thay giá trị mẫu.
+118	- [ ] Chạy server trong terminal riêng và ghi lại các cổng.
+119	- [ ] Thử cả tình huống thành công và thất bại, rồi dừng dịch vụ khi hoàn tất.
+120	Xem [hướng dẫn công nghệ](/) để hiểu cấu hình và [lỗi thường gặp](/references/common-errors) khi thiết lập thất bại. Đọc [ghi chú phiên bản](/references/versions) trước khi xem bản scaffold mới nhất là tương đương với phiên bản trong bài.
+121	title: Tự chạy n8n bằng Docker Compose
+122	version: Trình biên tập trên máy · SQLite · Compose v2
+123	# Tự chạy n8n bằng Docker Compose
+124	Chạy trình biên tập workflow n8n trên máy, lưu workflow mẫu và kiểm tra dữ liệu còn sau khi khởi động lại. Cấu hình tối thiểu này không có các dịch vụ AI sandbox tùy chọn, chỉ dành cho học tập trên máy cá nhân.
+125	[n8n](/technologies/n8n/), [Docker Compose v2](/technologies/docker/), named volume và cơ chế lưu trữ SQLite mặc định của n8n.
+126	Docker Desktop hoặc Docker Engine cùng plugin Compose v2. Kiểm tra daemon và plugin bằng `docker version`, `docker compose version`. Cổng **5678** cần trống. Trên Windows dùng chế độ Linux container của Docker; có thể chạy trong WSL2.
+127	Trong thư mục cha dành cho thực hành:
+128	Tạo `.env.example`:
+129	Sao chép thành `.env` (Bash: `cp .env.example .env`; PowerShell: `Copy-Item .env.example .env`). Thêm dòng `.env` vào `.gitignore`. Ví dụ không dùng API key bên ngoài. n8n tạo thông tin mã hóa khi chạy lần đầu và lưu trong volume dữ liệu.
+130	### 1. Định nghĩa dịch vụ
+131	Tạo `compose.yaml`:
+132	`N8N_SECURE_COOKIE=false` phục vụ bài thực hành HTTP chỉ mở trên **loopback**. Khi triển khai từ xa, dùng HTTPS và bật secure cookie. Không mở ví dụ này ra mọi địa chỉ mạng bằng cách thay host binding.
+133	### 2. Khởi chạy và kiểm tra
+134	Tại `n8n-local`:
+135	Chờ khởi động xong. Mở `http://localhost:5678` và thiết lập tài khoản chủ sở hữu. Ghi phiên bản thực tế bằng `docker compose exec n8n n8n --version`. Thay `latest` trong `.env` trên máy bằng đúng phiên bản ổn định đó để các lần chạy sau có thể tái lập.
+136	### 3. Tạo workflow
+137	Tạo và lưu **Manual Trigger → Edit Fields (Set)** với trường chuỗi `message` có giá trị `Hello handbook`. Chạy và xem đầu ra node cuối. Xem [khởi tạo n8n](/technologies/n8n/#khởi-tạo-dự-án) để theo dõi các bước trong giao diện. Tên và nút lưu/publish có thể khác giữa các phiên bản.
+138	### 4. Kiểm tra dữ liệu lưu bền vững
+139	Mở lại trình biên tập và kiểm tra workflow đã lưu. Named volume độc lập với container. `docker compose down` cũng giữ volume theo mặc định. **Cảnh báo:** `down -v` xóa volume và dữ liệu trong đó; không dùng trong quy trình này.
+140	Trên Windows dùng `curl.exe`. Mong đợi HTTP thành công từ `/healthz`, số phiên bản và container đang chạy. Workflow cần trả thông điệp và còn sau stop/start. Dừng dịch vụ bằng `docker compose stop` khi xong.
+141	| Vấn đề | Kiểm tra và sửa |
+142	| Container khởi động lại liên tục | Đọc log; kiểm tra image và kiến trúc được hỗ trợ |
+143	| Không có quyền với đường dẫn dữ liệu | Dùng named volume như ví dụ thay vì mount thư mục máy tùy ý |
+144	| Trình biên tập cảnh báo cookie | Kiểm tra URL loopback và cấu hình local; dùng HTTPS khi truy cập từ xa |
+145	| Workflow biến mất | Kiểm tra tên dự án Compose và volume; tránh tạo nhầm dự án khác |
+146	| Phiên bản thay đổi ngoài dự kiến | Thay tag biến động bằng phiên bản cụ thể đã rà soát |
+147	- [ ] Trình biên tập mở được và đã thiết lập chủ sở hữu.
+148	- [ ] Workflow thủ công đã lưu chạy được mà không cần credential bên ngoài.
+149	- [ ] Workflow và tài khoản còn sau khi khởi động lại.
+150	- [ ] Đã ghi lại phiên bản cài đặt.
+151	Trước khi nâng cấp, dừng instance, backup nhất quán toàn bộ volume và thử khôi phục vào instance riêng. Giữ thông tin mã hóa cùng cơ sở dữ liệu. Production cần kế hoạch PostgreSQL, TLS, URL/proxy, bảo vệ credential, thời hạn lưu dữ liệu và cô lập runner. Nếu cần n8n Assistant sandbox tùy chọn, đọc hướng dẫn cài đặt chính thức vì cần dịch vụ bổ sung.
+152	**Nguồn chính thức:** [Cài bằng Compose](https://docs.n8n.io/deploy/host-n8n/install-options/install-using-docker-compose) · [Biến triển khai](https://docs.n8n.io/hosting/configuration/environment-variables/deployment/) · [Ví dụ hosting n8n](https://github.com/n8n-io/n8n-hosting).
+153	title: Ứng dụng Next.js full stack
+154	version: App Router · create-next-app latest · TypeScript
+155	# Ứng dụng Next.js full stack
+156	Tạo dashboard kết xuất trên server và route API JSON trong cùng ứng dụng. Form trình duyệt gọi route và hiển thị lời chào đã được kiểm tra đầu vào. Bài nhập môn này chưa cần cơ sở dữ liệu và không lưu dữ liệu giữa các request.
+157	[Next.js App Router](/technologies/nextjs/), [React](/technologies/react/) và [TypeScript](/technologies/typescript/). Server Component đọc cấu hình riêng; Client Component nhỏ xử lý tương tác.
+158	Node.js **22.12+**, npm và kiến thức React cơ bản. Kiểm tra yêu cầu engine của scaffold trước khi tiếp tục. Bắt đầu tại thư mục cha dành cho thực hành.
+159	Chấp nhận mặc định của các câu hỏi còn lại. Nếu có tùy chọn compiler bổ sung, mặc định đủ cho bài này. `create-next-app` cài dependency; xem `package.json` để ghi lại phiên bản. `--src-dir` đặt route dưới `src/app`.
+160	Tạo `.env.example` tại thư mục gốc:
+161	Sao chép thành `.env.local` (Bash: `cp .env.example .env.local`; PowerShell: `Copy-Item .env.example .env.local`). Đảm bảo `.env.local` bị loại khỏi Git. Giá trị chỉ được đọc trên server, không có tiền tố `NEXT_PUBLIC_`. Đây là tiêu đề, nhưng ranh giới này cũng áp dụng với cấu hình riêng có tính bí mật.
+162	### 1. Thêm route handler
+163	Tạo `src/app/api/greeting/route.ts`:
+164	Route chịu trách nhiệm kiểm tra dữ liệu. Giới hạn đầu vào trên trình duyệt không đủ để bảo vệ endpoint server.
+165	### 2. Thêm tương tác phía client
+166	Tạo `src/app/components/GreetingForm.tsx`:
+167	### 3. Kết xuất trang trên server
+168	Thay nội dung `src/app/page.tsx`:
+169	Giữ root layout được tạo, nhưng thay import font-loader và class liên quan bằng `<html lang="vi"><body>{children}</body></html>` nếu build không truy cập được Google Fonts. Giữ import `globals.css`. Chỉnh tiêu đề và mô tả metadata theo dự án.
+170	Thay nội dung `src/app/globals.css`:
+171	Tại `handbook-next`:
+172	Mở URL được hiển thị (thường cổng 3000). Gửi tên và kiểm tra lời chào. Mở `http://localhost:3000/api/greeting?name=Ada` để xem JSON. Khi thiếu `name`, mong đợi HTTP 400 kèm đối tượng lỗi.
+173	Dừng development, rồi chạy tại cùng thư mục:
+174	Dùng ESLint CLI mà scaffold đã cài; các bản Next mới không cung cấp `next lint`. Lặp lại kiểm tra trình duyệt/API trên server production. Tiêu đề có thể được kết xuất trước khi build, nên cần build lại sau khi thay cấu hình này cho production.
+175	| Triệu chứng | Nguyên nhân và cách sửa |
+176	| Hook không được hỗ trợ trong Server Component | Giữ `'use client'` ở đầu file form |
+177	| API trả về 404 | Kiểm tra đường dẫn `src/app/api/greeting/route.ts` và khởi động lại sau khi chuyển file |
+178	| Cổng 3000 bị chiếm | Dừng bài Express hoặc dùng URL khác do Next hiển thị |
+179	| Tải font thất bại khi build | Bỏ font-loader bên ngoài và dùng font hệ thống |
+180	| Biến server không có trong trình duyệt | Đọc trên server; chỉ đưa dữ liệu chủ động công khai ra client |
+181	- [ ] Server kết xuất tiêu đề đã cấu hình.
+182	- [ ] Form gọi endpoint server thực tế.
+183	- [ ] Đầu vào không hợp lệ nhận HTTP 400.
+184	- [ ] Kiểm tra kiểu, lint và build production thành công.
+185	Dự án cần nền tảng chạy Node hoặc adapter hỗ trợ server route; static export thuần không phục vụ endpoint động này. Để lưu dữ liệu, thêm tầng cơ sở dữ liệu sau route, phân quyền và kiểm tra dữ liệu ghi. Xem [PostgreSQL](/technologies/postgresql/) để tiếp tục.
+186	**Nguồn chính thức:** [Cài đặt](https://nextjs.org/docs/app/getting-started/installation) · [Server và Client Component](https://nextjs.org/docs/app/getting-started/server-and-client-components) · [Route handler](https://nextjs.org/docs/app/api-reference/file-conventions/route).
+190	Đọc ghi chú từ PostgreSQL qua API Express và hiển thị trong React. Trình duyệt không kết nối trực tiếp với cơ sở dữ liệu. Dự án chỉ đọc dữ liệu và chưa có tài khoản.
+191	Frontend [React](/technologies/react/) + [TypeScript](/technologies/typescript/), API [Express 5](/technologies/express/), connection pool `pg` và [PostgreSQL 17](/technologies/postgresql/) trong Docker. Proxy development của Vite nối giao diện với API.
+192	Node.js 22.12+, npm, [Docker cùng Compose v2](/technologies/docker/) và ba terminal. Kiểm tra `node --version`, `docker version`. Các cổng **5173**, **3000** và **5432** cần trống.
+193	Từ thư mục cha dành cho thực hành:
+194	Bạn đang ở `handbook-stack`. Client và server có manifest, lockfile riêng.
+195	Tại **thư mục gốc repository**, tạo `.env.example`:
+196	Trong **server/.env.example**:
+197	Sao chép hai file mẫu thành `.env` tại thư mục tương ứng và thay mật khẩu giả bằng **cùng một mật khẩu chỉ dùng trên máy**. Mã hóa URL các ký tự đặc biệt khi đặt mật khẩu trong `DATABASE_URL`. Thêm `.env`, `node_modules/`, `dist/` vào `.gitignore` gốc; mẫu không có dấu `/` cũng áp dụng cho thư mục lồng nhau.
+198	Sao chép bằng Bash tại thư mục gốc:
+199	PowerShell: `Copy-Item .env.example .env` và `Copy-Item server/.env.example server/.env`.
+200	### 1. Khởi chạy cơ sở dữ liệu
+201	Tạo `db/schema.sql` tại gốc:
+202	Tạo `compose.yaml` tại gốc:
+203	Tại gốc, chạy `docker compose up -d db`, rồi `docker compose ps`. Chờ trạng thái **healthy**. SQL khởi tạo chỉ chạy với volume trống. Đường dẫn volume áp dụng cho PostgreSQL **17**; không đổi tag phiên bản chính trên dữ liệu hiện có như một cách nâng cấp.
+204	### 2. Xây dựng API
+205	Tạo `server/src/server.js`:
+206	Express 5 chuyển lỗi từ route bất đồng bộ đến error handler. Với truy vấn có đầu vào người dùng, dùng placeholder (`WHERE id = $1`) và mảng giá trị, không nối chuỗi. Xem [truy vấn node-postgres](https://node-postgres.com/features/queries).
+207	### 3. Kết nối client
+208	Thay nội dung `client/vite.config.ts`:
+209	Thay nội dung `client/src/App.tsx`:
+210	Terminal 1, tại `handbook-stack/server`: `npm run dev`.
+211	Terminal 2, tại `handbook-stack/client`: `npm run dev`.
+212	Terminal 3, tại `handbook-stack`:
+213	Trên Windows dùng `curl.exe`. Mong đợi một dòng dữ liệu, `{"status":"ok"}` và mảng ghi chú JSON. Mở URL Vite hiển thị; ghi chú mẫu cần xuất hiện. Dừng API và tải lại giao diện để kiểm tra thông báo lỗi, rồi khởi động lại API.
+214	Trong `client`, chạy `npm run lint` và `npm run build`. Dừng hai server bằng Ctrl+C. Tại gốc, dùng `docker compose stop` khi xong để giữ dữ liệu.
+215	| Triệu chứng | Chẩn đoán và cách sửa |
+216	| Cổng 5432 đang dùng | Đổi ánh xạ cổng máy sang `127.0.0.1:5433:5432` và URL server sang cổng 5433 |
+217	| Relation notes does not exist | Script khởi tạo được thêm sau khi volume đã tạo. Kiểm tra database và áp dụng SQL đã rà soát, bảo toàn dữ liệu cần dùng |
+218	| Password authentication failed | Volume cũ có thể dùng mật khẩu trước đó; đổi biến Compose không đổi người dùng đã có |
+219	| Giao diện nhận HTML thay vì JSON | Kiểm tra đường dẫn proxy và API; khởi động lại Vite sau khi đổi cấu hình |
+220	| API trong container không kết nối được | `localhost` chỉ container đó. Dùng tên service `db` và cổng 5432 trên mạng Compose |
+221	- [ ] Database báo healthy và trả ghi chú mẫu.
+222	- [ ] API trả dữ liệu và trả 404 cho đường dẫn không có.
+223	- [ ] Giao diện hiển thị trạng thái tải, thành công và lỗi request.
+224	- [ ] Lint và build client thành công.
+225	Trong production, triển khai API riêng với secret được cấp lúc chạy, TLS database theo nhà cung cấp và migration. Phục vụ `client/dist` với `/api` chuyển tiếp đến API hoặc cấu hình API origin công khai với chính sách CORS phù hợp. **Proxy development của Vite không nằm trong bản build production.** Thêm phân quyền và kiểm tra dữ liệu trước khi cho phép ghi.
+226	**Nguồn chính thức:** [Express](https://expressjs.com/) · [Pool node-postgres](https://node-postgres.com/features/pooling) · [Image PostgreSQL](https://hub.docker.com/_/postgres).
+228	version: Scaffold Vite react-ts · Node.js 22.12+
+230	Tạo bộ đếm có kiểu dữ liệu, kiểm tra TypeScript và xuất file tĩnh production. Ứng dụng chỉ chạy trên trình duyệt, không có API server hay cơ sở dữ liệu.
+231	[React](/technologies/react/) cho component, [TypeScript](/technologies/typescript/) để kiểm tra tĩnh và [Vite](https://vite.dev/guide/) cho development và đóng gói.
+232	- Node.js 22.12+ và npm; xem engine nếu scaffold mới yêu cầu cao hơn.
+233	- Trình soạn thảo code và trình duyệt.
+234	- Thư mục cha thực hành chưa có `handbook-ui`.
+235	Tại thư mục cha thực hành, chạy lần lượt:
+236	Template có React, cấu hình TypeScript và script build. `--` chuyển `--template` qua npm. Xem `package.json`; `@latest` chọn scaffold hiện tại, không phải phiên bản cố định.
+237	Không cần biến môi trường. Khi thêm API, ghi URL công khai trong `.env.example`; xem [cấu hình React](/technologies/react/#cấu-hình). Không đặt thông tin đăng nhập database trong file môi trường frontend.
+238	1. Giữ `src/main.tsx` từ scaffold; file này gắn `App` vào trang.
+239	2. Thay `src/App.tsx` bằng component sau:
+240	3. Thay `src/index.css` bằng CSS tối thiểu:
+241	4. Giữ cấu hình TypeScript và Vite được tạo. Chỉ xóa tài nguyên mẫu không dùng sau khi kiểm tra không còn import tham chiếu.
+242	Tại `handbook-ui`:
+243	Mở URL được hiển thị. Bấm **Tăng một** hai lần, mong đợi `Số đếm: 2`; bấm **Đặt lại**, mong đợi `Số đếm: 0`. Dùng Tab và Enter để thao tác cả hai nút.
+244	Trong terminal khác tại cùng thư mục:
+245	Build cần tạo `dist/`. Mở URL preview và thử lại tương tác. Để kiểm tra ràng buộc kiểu, tạm đổi `setCount(0)` thành `setCount('zero')`; build cần thất bại. Hoàn tác thay đổi trước khi commit.
+246	| Vấn đề | Cách sửa |
+247	| Node engine không được hỗ trợ | Nâng cấp Node, mở lại terminal, kiểm tra phiên bản đang dùng |
+248	| Cổng 5173 không dùng được | Dùng URL Vite hiển thị hoặc dừng server trước đó |
+249	| CSS scaffold cũ vẫn còn | Bỏ import `App.css` khi thay `App.tsx` |
+250	| Development chạy nhưng build lỗi | Vite chuyển đổi cú pháp; script build còn kiểm tra kiểu. Đọc chẩn đoán TypeScript |
+251	- [ ] Bộ đếm dùng được bằng chuột và bàn phím.
+252	- [ ] Lint và build thành công sau khi khôi phục kiểu đúng.
+253	- [ ] Preview production hoạt động giống development.
+254	Triển khai `dist/` lên hosting tĩnh. Biến frontend công khai cần đặt **trước** khi build. Thêm routing, kiểm thử hành vi và trạng thái lỗi API khi ứng dụng cần.
+255	**Liên quan:** [React](/technologies/react/) · [TypeScript](/technologies/typescript/) · [React full stack](/project-guides/react-express-postgresql). **Nguồn chính thức:** [React từ đầu](https://react.dev/learn/build-a-react-app-from-scratch) · [Hướng dẫn Vite](https://vite.dev/guide/).
+256	title: Lỗi thường gặp và cách xử lý
+257	version: Chẩn đoán trước · bảo toàn dữ liệu
+258	# Lỗi thường gặp và cách xử lý
+259	Đọc **lỗi có ý nghĩa đầu tiên**, ghi lại câu lệnh và thư mục hiện tại, kiểm tra log dịch vụ trước khi cài lại mọi thứ. Các cách sửa dưới đây giả định bạn quản lý các tiến trình thực hành trên máy.
+260	## Không tìm thấy lệnh
+261	**Triệu chứng:** không gọi được `node`, `npm`, `git` hoặc `docker`.
+262	**Nguyên nhân có thể:** chưa cài, PATH chưa cập nhật hoặc terminal dùng môi trường khác.
+263	**Kiểm tra:** mở lại terminal và chạy lệnh xem phiên bản. PowerShell dùng `Get-Command node`; Bash dùng `command -v node` để tìm chương trình đang được gọi. WSL và Windows có thể có bản cài riêng.
+264	**Cách sửa:** hoàn tất cài đặt theo nguồn chính thức rồi kiểm tra lại. Tránh cài cùng công cụ bằng nhiều cách cạnh tranh nhau.
+265	## Engine không tương thích / EBADENGINE
+266	**Nguyên nhân có thể:** Node đang dùng cũ hơn yêu cầu engine của package.
+267	**Kiểm tra:** so sánh `node --version` với dải phiên bản package hỗ trợ, thay vì chỉ dựa vào phiên bản đã định cài.
+268	**Cách sửa:** chọn Node còn được hỗ trợ và mở lại shell. Handbook yêu cầu Node 22.12+; dự án mới tạo có thể yêu cầu cao hơn. Không tắt kiểm tra engine làm cách sửa đầu tiên.
+269	## EADDRINUSE / cổng đã được sử dụng
+270	**Nguyên nhân có thể:** server khác đang chiếm cổng yêu cầu.
+271	**Kiểm tra:** xem các terminal trước đó và `docker compose ps`. Trong PowerShell có thể dùng `Get-NetTCPConnection -LocalPort 3000` nếu được hỗ trợ.
+272	**Cách sửa:** dừng server thực hành trước đó bằng Ctrl+C, hoặc đổi cổng ứng dụng cùng proxy/URL tương ứng. Với Docker, chỉ phía **trái** của `3001:3000` là cổng trên máy. Không dừng tiến trình không liên quan chỉ để giải phóng cổng.
+273	## npm ci lỗi do lockfile không khớp
+274	**Nguyên nhân có thể:** `package.json` thay đổi nhưng lockfile chưa đổi, hoặc đang ở sai thư mục.
+275	**Kiểm tra:** xem `git diff -- package.json package-lock.json` và xác định đúng thư mục gốc dự án.
+276	**Cách sửa:** nếu chủ động đổi dependency, chạy `npm install`, xem cả hai file và commit cùng nhau. Nếu đổi nhầm, khôi phục manifest dự kiến trước khi chạy `npm ci`. Xóa lockfile làm mất khả năng tái lập nên không phải cách sửa mặc định.
+277	## Cannot use import / require is not defined
+278	**Nguyên nhân có thể:** trộn quy ước ESM với CommonJS.
+279	**Kiểm tra:** xem trường `type` trong `package.json` gần nhất và phần mở rộng file. `.mjs` là ESM; `.cjs` là CommonJS.
+280	**Cách sửa:** theo [khởi tạo Node.js](/technologies/nodejs/#khởi-tạo-dự-án). Với TypeScript Node ESM, dùng NodeNext và đuôi `.js` của file đầu ra trong import tương đối. Bundler trình duyệt có quy tắc phân giải khác.
+281	## Biến môi trường có giá trị undefined
+282	**Nguyên nhân có thể:** sai vị trí file, thiếu bước nạp, tiến trình chưa khởi động lại hoặc sai quy tắc tiền tố của frontend.
+283	**Kiểm tra:** xác nhận thư mục và tên biến mà không in secret. Ví dụ Node nạp `.env` rõ ràng; script production chờ biến được cấp lúc chạy. Vite chỉ đưa biến `VITE_` ra code trình duyệt.
+284	**Cách sửa:** tạo file từ `.env.example`, khởi động lại tiến trình và dùng API truy cập phù hợp. Không sửa URL database riêng bằng cách thêm tiền tố frontend công khai.
+285	## Lỗi CORS trên trình duyệt
+286	**Nguyên nhân có thể:** frontend và API khác origin, API chưa cho phép origin đó.
+287	**Kiểm tra:** so sánh giao thức, host và cổng; xem request lỗi trong công cụ phát triển của trình duyệt.
+288	**Cách sửa:** dùng [proxy Vite](/project-guides/react-express-postgresql#_3-kết-nối-client) khi development. Trong production, dùng chung origin hoặc cấu hình rõ origin được phép. CORS không thay thế phân quyền.
+289	## Database từ chối kết nối hoặc xác thực thất bại
+290	**Kiểm tra:** `docker compose ps`, log database và host/cổng trong môi trường API. Tiến trình trên máy dùng `localhost` với cổng đã mở; container cùng mạng dùng `db:5432`.
+291	**Cách sửa:** chờ database sẵn sàng trước khi chạy API. Đảm bảo credential khớp với **database đã khởi tạo**, không chỉ `.env` mới nhất. Volume bền vững giữ người dùng ban đầu. Không xóa volume như cách sửa xác thực chung.
+292	## Bảng dữ liệu không tồn tại
+293	**Nguyên nhân có thể:** SQL khởi tạo không chạy do đã có volume hoặc chưa áp dụng migration.
+294	**Kiểm tra:** xem bảng bằng `docker compose exec db psql -U handbook -d handbook -c "\dt"` tại dự án thực hành.
+295	**Cách sửa:** rà soát và áp dụng schema hoặc migration vào đúng database. Script khởi tạo không phải hệ thống migration. Chỉ tạo lại storage khi chủ động chấp nhận mất toàn bộ dữ liệu thực hành.
+296	## Container không truy cập được dịch vụ localhost
+297	Trong container, `localhost` chỉ chính container đó. Dùng tên service Compose cho dịch vụ khác hoặc host gateway được nền tảng hỗ trợ khi truy cập dịch vụ trên máy. Kiểm tra dịch vụ đích lắng nghe trên giao diện mạng có thể truy cập. Xem [xử lý lỗi Docker](/technologies/docker/#xử-lý-lỗi).
+298	## React chạy development nhưng build lỗi
+299	Vite có thể phục vụ code đã chuyển đổi trước khi kiểm tra kiểu đầy đủ. Chạy `npm run build` tại gốc ứng dụng và sửa lỗi kiểu được báo. Xem script build thực tế vì mỗi template có thể dùng kiểm tra khác nhau.
+300	## Mất workflow hoặc credential n8n sau khởi động lại
+301	Kiểm tra tên dự án Compose, named volume và thông tin mã hóa gốc. Đổi thư mục/tên dự án có thể tạo volume khác. Khôi phục credential cần khóa tương ứng, chỉ JSON workflow là chưa đủ. Xem [cấu hình n8n](/technologies/n8n/#cấu-hình).
+302	## Liên kết handbook lỗi khi build
+303	Chạy `npm run check` tại gốc handbook để xác định trang nguồn và đích. Dùng `/technologies/react/` cho trang công nghệ và ID tiêu đề chính xác cho anchor. Sau khi sửa, chạy `npm run build`; VitePress cũng từ chối liên kết trang hỏng.
+304	**Liên quan:** [Lệnh thường dùng](/references/quick-commands) · [Bắt đầu](/getting-started) · [Ghi chú phiên bản](/references/versions).
+305	title: Biên soạn tài liệu
+306	version: Quy ước nội dung · Handbook 1.0
+307	# Biên soạn tài liệu
+308	Mỗi trang cần hữu ích ngay khi người đọc muốn tra lệnh. Giải thích thư mục, yêu cầu, thao tác và kết quả mong đợi. Viết bằng tiếng Việt theo `AGENTS.md` tại gốc repository, giữ nguyên định danh kỹ thuật. Ví dụ chưa chạy phải ghi **Chưa kiểm thử**.
+309	## Thêm công nghệ
+310	1. Sao chép `templates/technology.md` tại gốc vào `docs/technologies/your-tool/index.md`.
+311	2. Hoàn thiện các mục phù hợp và thay nội dung mẫu. Thêm frontmatter `title`, `version`, `status` (`guide` hoặc `starter`). Không tạo mục rỗng cho phần không áp dụng.
+312	3. Thêm mục vào `docs/.vitepress/catalog.ts`. Sidebar và trang chủ đọc cùng danh mục, không cần thay cấu trúc giao diện.
+313	4. Liên kết hướng dẫn dự án phù hợp và tài liệu chính thức.
+314	5. Chạy các kiểm tra dưới đây, xem trang ở cả hai chế độ sáng/tối.
+315	Dùng tên thư mục ngắn, chữ thường, kebab-case. Đánh dấu nội dung chưa hoàn thiện bằng `status: starter`, `starter: true` trong danh mục và thông báo **Đang biên soạn** để người đọc biết phạm vi trước khi mở.
+316	## Thêm hướng dẫn dự án
+317	Sao chép `templates/project-guide.md` tại gốc vào `docs/project-guides/your-guide.md`. Thêm mục vào `projectGuides` trong danh mục. Dùng các mục chuẩn theo thứ tự và đưa đủ file cần để tái lập kết quả, hoặc liên kết rõ bài tiên quyết tạo các file đó.
+318	Liên kết phần giải thích sâu về công nghệ thay vì sao chép lại, nhưng giữ trình tự thực hiện trong bài đủ rõ để làm theo.
+319	## Quy ước câu lệnh
+320	- Ghi thư mục thực hiện ngay trước khối lệnh.
+321	- Giải thích lệnh khó hiểu sẽ tạo hoặc thay đổi gì.
+322	- Gắn nhãn cú pháp chỉ dùng trong Bash; thêm lệnh PowerShell tương ứng khi sao chép file.
+323	- Dùng giá trị giả trong `.env.example`, nêu rõ phần cần thay.
+324	- Đặt đường dẫn file phía trên khối code; cung cấp ví dụ tối thiểu đầy đủ.
+325	- Phân biệt preview trên máy, dịch vụ development và triển khai production.
+326	- Ghi phiên bản khi câu lệnh hoặc đường dẫn lưu trữ phụ thuộc phiên bản.
+327	- Ưu tiên tài liệu chính thức; ghi ngày rà soát trong ghi chú phiên bản khi thay nền tảng.
+328	## Liên kết và điều hướng
+329	Dùng liên kết từ gốc website như `/technologies/nodejs/` và `/project-guides/docker-nodejs`. VitePress áp dụng base triển khai cho liên kết Markdown. Component tùy chỉnh cần gọi `withBase()` khi tạo URL. Không dùng đường dẫn file hệ thống làm URL trình duyệt.
+330	Đặt nhãn liên kết và tiêu đề có ý nghĩa. Mỗi trang có một H1; các mục H2 tạo mục lục bên phải.
+331	## Xác nhận thay đổi
+332	Từ thư mục gốc repository:
+333	Bộ kiểm tra rà soát mục chuẩn, tiêu đề trùng, liên kết Markdown, anchor và đích trong danh mục. Build production từ chối liên kết trang hỏng và tạo chỉ mục tìm kiếm toàn văn. Các bước này không chạy lệnh của bài hướng dẫn hay kiểm tra dịch vụ ngoài.
+334	## Danh sách rà soát
+335	- [ ] Thư mục bắt đầu và phiên bản công cụ rõ ràng.
+336	- [ ] Bài giải thích đủ source file và ví dụ môi trường cần dùng.
+337	- [ ] Câu lệnh được sắp theo thứ tự thực thi.
+338	- [ ] Người đọc có thể xác nhận thành công và nhận biết lỗi thường gặp.
+339	- [ ] Ví dụ, URL và ảnh chụp không chứa secret.
+340	- [ ] Có liên kết trang liên quan và nguồn chính thức.
+341	- [ ] Nội dung mới tìm được trong preview production.
+342	- [ ] Giao diện di động và điều hướng bàn phím dùng được.
+343	title: Lệnh thường dùng
+344	version: Tra cứu để sao chép · kiểm tra thư mục trước khi chạy
+345	# Lệnh thường dùng
+346	Sao chép lệnh cần dùng rồi xem bài liên quan để hiểu ngữ cảnh. Các lệnh giả định dự án tương ứng đã tồn tại. Server tiếp tục chạy cho đến khi dừng bằng Ctrl+C.
+347	## Kiểm tra môi trường
+348	Docker cần hiển thị cả client và server có thể kết nối. Xem [bắt đầu](/getting-started) để biết công cụ dùng chung.
+349	## Tạo ứng dụng React + TypeScript
+350	Từ thư mục cha thực hành, không phải thư mục source của ứng dụng khác:
+351	`@latest` chọn phiên bản scaffold biến động. Xem [hướng dẫn đầy đủ](/project-guides/react-typescript-vite).
+352	## Build và preview Vite
+353	Từ thư mục gốc ứng dụng được tạo:
+354	Đầu ra mong đợi là `dist/`. Server preview dùng để kiểm tra bản production trên máy; triển khai các file đó bằng hosting tĩnh.
+355	## Chạy ứng dụng Next.js
+356	Từ thư mục cha:
+357	Để kiểm tra production, dừng development rồi chạy tại gốc ứng dụng:
+358	Các lệnh dùng ESLint và TypeScript đã cài trong scaffold. Xem [bài Next.js](/project-guides/nextjs-fullstack).
+359	## Kiểm tra TypeScript và Node
+360	Từ dự án TypeScript đã khởi tạo và có `tsconfig.json`:
+361	Tại gốc `node-api` trong bài Node:
+362	Script development cần `.env` trên máy. [TypeScript](/technologies/typescript/) · [Node.js](/technologies/nodejs/).
+363	## Sao chép file môi trường mẫu
+364	Từ thư mục chứa file mẫu. Xem và chỉnh `.env` mới trước khi chạy dịch vụ.
+365	Với Next.js, dùng đích `.env.local`. Không commit secret đã điền.
+366	## Cài đặt theo lockfile
+367	Từ repository có `package-lock.json` hợp lệ:
+368	`npm ci` thay `node_modules` theo lockfile; lệnh thất bại nếu manifest và lockfile không khớp. Chủ động dùng `npm install` khi đổi dependency.
+369	## Kiểm tra Docker Compose
+370	Từ thư mục chứa `compose.yaml`:
+371	Để xóa container dự án và mạng của chúng, giữ named volume:
+372	**Cảnh báo:** thêm `-v` sẽ xóa volume và dữ liệu trong đó. Chỉ dùng khi chủ động chấp nhận mất dữ liệu. Xem [bài Docker](/technologies/docker/).
+373	## Truy vấn database thực hành
+374	Tại `handbook-stack` sau khi database báo healthy:
+375	Mong đợi ghi chú mẫu và phiên bản PostgreSQL server. Xem [bài full stack](/project-guides/react-express-postgresql).
+376	## Kiểm tra n8n
+377	Tại `n8n-local` khi container đang chạy:
+378	Ghi lại phiên bản trước khi nâng cấp. Xem [bài n8n Compose](/project-guides/n8n-compose).
+379	## Git hằng ngày
+380	Từ repository Git đã khởi tạo:
+381	Stage từng file cụ thể và đọc diff đã stage trước khi commit. Commit cần cấu hình tên, email Git. Xem [tài liệu Git đang biên soạn](/technologies/git/).
+382	## Chạy handbook
+383	Từ thư mục gốc repository này:
+384	Để kiểm tra và preview production, dùng terminal khác tại cùng thư mục gốc:
+385	Handbook xuất file tĩnh vào `dist/` ở gốc. Xem [ghi chú phiên bản](/references/versions) để biết bộ công cụ và phạm vi kiểm tra.
+386	title: Ghi chú phiên bản
+387	version: Handbook 1.0 · Biên soạn ngày 07/11/2026
+388	# Ghi chú phiên bản
+389	## Phiên bản nền của handbook
+390	Handbook ghim **VitePress 1.6.4** thuộc nhánh 1.x. Dependency được cố định và `package-lock.json` ghi toàn bộ cây cài đặt. Đây là lựa chọn của repository, không phải khẳng định phiên bản mới nhất.
+391	| Dependency | Phiên bản ghim | Vai trò |
+392	| VitePress | 1.6.4 | Website tài liệu tĩnh và tìm kiếm trên máy |
+393	| Vue | 3.5.45 | Component trang chủ và đường dẫn điều hướng |
+394	| TypeScript | 5.7.3 | Kiểm tra cấu hình và component |
+395	| vue-tsc | 3.3.14 | Kiểm tra TypeScript trong Vue |
+396	| Vite override | 6.4.5 | Dependency phục vụ development và build |
+397	| Node typings | 22.10.5 | Khai báo API Node lúc build |
+398	Node.js **22.12+** là yêu cầu nền của repository. Dùng bản LTS còn được hỗ trợ đáp ứng dải này. Kiểm tra phiên bản thực tế bằng `node --version` và `npm --version`; kết quả build chỉ áp dụng cho môi trường đã chạy kiểm tra.
+399	## Lý do có Vite override
+400	VitePress 1.6.4 khai báo dependency Vite 5; repository override sang **6.4.5**. Cấu hình này nằm ngoài dải Vite mà VitePress 1.x khai báo. Khi đổi override phải kiểm tra kiểu, build production và tìm kiếm. Không suy ra mọi plugin VitePress bên ngoài đều tương thích.
+401	Dữ liệu lỗ hổng thay đổi theo thời gian; chạy `npm audit` trước khi đánh giá bảo mật hoặc cập nhật dependency. Người đọc nhận tài nguyên tĩnh; server development không phải dịch vụ production.
+402	## Chính sách phiên bản trong ví dụ
+403	| Phạm vi | Phiên bản nền / hành vi |
+404	| React + Vite | Scaffold `react-ts` chính thức với `@latest`; kiểm tra engine được tạo |
+405	| TypeScript độc lập | Compiler major 5, cấu hình ESM NodeNext |
+406	| Ví dụ Node | Node 22.12+; nạp môi trường và watch tích hợp |
+407	| Ví dụ Express | Chỉ định major 5 |
+408	| Bài database | `pg@8`, `postgres:17`, đường dẫn volume phiên bản 17 |
+409	| Bài Next.js | create-next-app với App Router; ESLint CLI được cài |
+410	| Docker | Compose v2 (`docker compose`), không dùng khóa `version` cũ |
+411	| n8n trên máy | Lần đầu dùng tag `latest` biến động; ghi và ghim phiên bản thực tế |
+412	| Prisma | Trang đang biên soạn dẫn tài liệu theo major; không hướng dẫn cài bản RC |
+413	Lệnh scaffold là điểm bắt đầu, không bảo đảm mọi phiên bản tương lai có cùng hành vi. Công cụ mới có thể đổi câu hỏi, yêu cầu hoặc file. Đọc ghi chú migration chính thức thay vì bỏ qua chẩn đoán.
+414	## Phạm vi nội dung
+415	**Hướng dẫn nhập môn:** React, TypeScript, Node.js, Express.js, Docker, n8n. Các trang theo cấu trúc chung và có bước xác nhận kết quả.
+416	**Đang biên soạn:** JavaScript, Next.js, PostgreSQL, Prisma, Git & GitHub. Các trang có yêu cầu, ranh giới cấu hình, lệnh khởi đầu và bước tiếp theo; chưa có mức chi tiết như hướng dẫn đầy đủ.
+417	Năm bài dự án có ví dụ triển khai, quy ước môi trường, cách kiểm tra, lỗi thường gặp và kết quả mong đợi. Đây là hướng dẫn tạo dự án riêng; repository chứa website tài liệu, không chứa năm ứng dụng được tạo sẵn.
+418	## Giới hạn xác minh
+419	Build website kiểm tra liên kết trang nội bộ; bộ kiểm tra repository còn kiểm tra anchor và mục chuẩn. `npm run typecheck` kiểm tra kiểu component/cấu hình riêng. Chỉ mục tìm kiếm được tạo trong build production.
+420	Các lệnh kiểm tra có sẵn gồm `npm run check`, `npm run typecheck`, `npm run build` và `npm run verify`. `verify` kiểm tra tài nguyên điều hướng, anchor, markup sao chép code, CSS responsive và truy vấn với công cụ tìm kiếm của VitePress, gồm cả lỗi gõ. Đặt `SITE_ORIGIN` khi muốn kiểm tra HTTP trên server preview đang chạy. Chỉ ghi nhận thành công khi lệnh thực tế hoàn tất.
+421	Kiểm tra file tĩnh và công cụ tìm kiếm chưa xác nhận thao tác giao diện. Cần kiểm tra trình duyệt cho bố cục, viewport, nút sao chép và tương tác bàn phím trong hộp tìm kiếm.
+422	**Chưa kiểm thử:** các ví dụ ứng dụng trong bài công nghệ và dự án chưa được cài đặt, chạy đầy đủ trong đợt chỉnh sửa này. Kiểm tra website không xác nhận các stack đó hoạt động. Bài Docker cần Docker trên máy người đọc. Bộ kiểm tra offline không xác nhận liên kết ngoài còn truy cập được.
+423	## Cập nhật an toàn
+424	1. Tạo branch và ghi kết quả build hiện tại.
+425	2. Đọc release note, yêu cầu engine và cấu hình Vite override.
+426	3. Cập nhật manifest và lockfile cùng nhau.
+427	4. Chạy `npm run check`, `npm run typecheck`, `npm run build` và `npm run verify`.
+428	5. Preview trên desktop và di động, mở tìm kiếm, sao chép một khối code.
+429	6. Cập nhật trang này và các ví dụ bị ảnh hưởng.
+430	**Nguồn chính thức:** [VitePress 1.x](https://vuejs.github.io/vitepress/v1/) · [Chính sách phát hành Vite](https://vite.dev/releases) · [Các bản Node](https://nodejs.org/en/about/previous-releases).
+432	version: Docker Engine / Desktop · Compose v2
+434	## Tổng quan
+435	Docker đóng gói tiến trình và dependency thành image. Container chạy từ image; volume giữ dữ liệu độc lập. Dùng container cho dịch vụ có môi trường nhất quán và hạ tầng trên máy. Container vẫn chia sẻ kernel của host, không phải máy ảo đầy đủ.
+436	Bật ảo hóa phần cứng nếu môi trường desktop yêu cầu. Trên Windows, Docker Desktop thường dùng WSL2. Trên Linux có thể dùng Docker Engine cùng plugin Compose. Bạn cần quyền kết nối Docker daemon.
+437	## Cài đặt
+438	Theo [hướng dẫn Docker Desktop](https://docs.docker.com/desktop/) cho hệ điều hành hoặc [cài Docker Engine](https://docs.docker.com/engine/install/) trên Linux. Chạy daemon rồi thực hiện tại terminal bất kỳ:
+439	Mong đợi phiên bản client/server, phiên bản Compose v2 và thông báo hello-world thành công. Lệnh cuối tải image rồi xóa container sau khi thoát.
+440	## Khởi tạo dự án
+441	Tại thư mục cha, chạy `mkdir docker-lab`, rồi `cd docker-lab`. Tạo `compose.yaml`:
+442	Tại `docker-lab`:
+443	`config` kiểm tra và kết xuất cấu hình. `up -d` chạy nền. Mở `http://localhost:8080`, mong đợi trang chào nginx. Tag image biến động thuận tiện cho thực hành; ghim digest được duyệt khi cần triển khai tái lập.
+444	## Cấu hình
+445	`compose.yaml` mô tả service, cổng, môi trường và volume. Ánh xạ trên chỉ mở loopback: cổng 8080 của máy chuyển tới cổng 80 của container. Container liên lạc bằng tên service Compose, không dùng cổng đã mở trên máy.
+446	Bài thực hành không cần file môi trường. Khi thêm cấu hình, đưa `.env.example` vào Git, giữ `.env` trên máy và thay biến bằng `${VARIABLE}`. `docker compose config` có thể in secret sau khi thay biến; không đưa toàn bộ kết quả vào log công khai.
+447	Dùng `Dockerfile` khi tự build image; xem [đóng gói Node.js](/project-guides/docker-nodejs). Dùng `.dockerignore` để loại `.env`, `.git`, `node_modules` khỏi build context.
+448	## Cấu trúc dự án
+449	## Lệnh thường dùng
+450	Chạy lệnh Compose từ thư mục chứa `compose.yaml`:
+451	`down` giữ named volume trừ khi yêu cầu xóa. **Cảnh báo:** `down -v` xóa volume và dữ liệu; không dùng với dữ liệu cần giữ. Development có thể dùng bind mount để nhận thay đổi source. Production nên chạy image đã build thay vì mount thư mục làm việc.
+452	## Thực hành tốt
+453	- Lưu database trong named volume và thử khôi phục backup.
+454	- Dùng cú pháp Compose v2 `docker compose`; không cần khóa `version` ở đầu file.
+455	- Không đặt secret trong lớp image hoặc build argument.
+456	- Dùng người dùng không có quyền root khi được hỗ trợ; chỉ mở cổng cần thiết.
+457	- Thêm health check và chính sách tài nguyên phù hợp.
+458	- Build lại image sau khi đổi dependency; khởi động lại container không build lại image.
+459	## Xử lý lỗi
+460	| Triệu chứng | Nguyên nhân | Cách sửa |
+461	| Không kết nối được daemon | Engine đã dừng hoặc sai context | Khởi chạy Docker; xem `docker context ls` |
+462	| Cổng đã được dùng | Cổng trên máy bị chiếm | Chọn cổng bên trái khác, ví dụ `127.0.0.1:8081:80` |
+463	| Container thoát ngay | Tiến trình chính lỗi hoặc đã xong | Đọc `docker compose logs web` |
+464	| Service không gọi được service khác | Dùng `localhost` trong container | Dùng tên service đích và cổng nội bộ |
+465	| Bind mount báo không đủ quyền | Người dùng host/container không khớp | Kiểm tra quyền sở hữu; ưu tiên named volume cho dữ liệu dịch vụ |
+466	## Đánh giá
+467	Docker giảm khác biệt môi trường và giúp kết hợp dịch vụ. Image, volume, mạng và cập nhật vẫn cần quản lý vận hành. Công cụ cài trực tiếp có thể nhẹ hơn cho script nhỏ.
+468	**Tiếp theo:** [Đóng gói Node](/project-guides/docker-nodejs) · [n8n Compose](/project-guides/n8n-compose). **Nguồn chính thức:** [Bắt đầu với Compose](https://docs.docker.com/compose/gettingstarted/) · [Volume](https://docs.docker.com/engine/storage/volumes/).
+472	Express là HTTP framework nhỏ cho [Node.js](/technologies/nodejs/). Dùng để tạo API với route và middleware theo thứ tự. Bạn tự chọn database, kiểm tra dữ liệu, xác thực và kiến trúc.
+473	Cài Node.js **22.12+** và npm. Hiểu HTTP method, mã trạng thái, JSON và promise. Bài áp dụng cho **Express 5**, có hành vi route và xử lý lỗi khác phiên bản 4.
+474	`express@5` chọn major 5 thay vì major tương lai có thay đổi phá vỡ tương thích. Đưa `package-lock.json` vào Git để giữ phiên bản đã phân giải.
+475	Tạo `src/app.js`:
+476	Tạo `src/server.js`:
+477	Tách ứng dụng khỏi listener giúp kiểm thử tích hợp dễ hơn. Express 5 chuyển promise bị reject từ async route handler đến error middleware. Lỗi trong callback hoặc timer tách rời vẫn cần xử lý rõ ràng.
+478	Tạo `.env.example` có `PORT=3000`. Sao chép thành `.env` trên máy và loại khỏi Git; xem [quy ước file môi trường](/getting-started#file-môi-trường). Middleware chạy theo thứ tự đăng ký: phân tích JSON trước route, đặt error handler bốn tham số cuối cùng.
+479	Development dùng script watch. Production dùng `npm start` với biến môi trường được cấp và `NODE_ENV=production`. Chỉ cấu hình trusted proxy cho mô hình triển khai thực tế; không bật tin cậy proxy tùy ý như cách sửa chung.
+480	Tại `express-api`:
+481	Trong terminal thứ hai (Bash; PowerShell có thể mở `/health` trong trình duyệt):
+482	Mong đợi HTTP 200 với đối tượng trạng thái, HTTP 200 với thông điệp gửi lại, rồi HTTP 400. Route không tồn tại cần trả 404. Chạy `npm ls express` để xem phiên bản framework đã cài.
+483	- Kiểm tra body, URL parameter và query tại điểm nhận dữ liệu.
+484	- Dùng truy vấn tham số hóa và connection pool.
+485	- Giữ định dạng lỗi công khai ổn định; chỉ ghi chi tiết nội bộ trong log server.
+486	- Đặt giới hạn và timeout; thêm phân quyền trước route riêng tư.
+487	- Ưu tiên proxy development của Vite cho request trình duyệt trên máy; CORS không phải cơ chế kiểm soát truy cập.
+488	- Production cần security header, giới hạn tốc độ, HTTPS và đóng kết nối database đúng cách khi dừng.
+489	| Triệu chứng | Nguyên nhân | Giải pháp |
+490	| `req.body` là undefined | Thiếu parser hoặc content type JSON | Đăng ký `express.json()` trước route; gửi đúng header |
+491	| Cannot GET / | Chưa có route `/` | Gọi `/health` hoặc định nghĩa route cần dùng |
+492	| Missing parameter name sau nâng cấp | Cú pháp wildcard của Express 4 | Dùng wildcard có tên của Express 5; xem hướng dẫn migration |
+493	| Headers already sent | Handler trả lời hai lần | Return sau khi gửi phản hồi; kiểm tra trong error handler |
+494	| Trình duyệt lỗi CORS | Request khác origin | Dùng proxy trên máy hoặc cho phép rõ origin dự kiến |
+495	Express linh hoạt, dễ đưa vào API nhỏ. Cấu trúc tối giản đòi hỏi tự chọn và duy trì kiểm tra dữ liệu, phân quyền, khả năng quan sát. Framework có quy ước chặt hơn có thể phù hợp với nhóm lớn.
+496	**Tiếp theo:** [React + Express + PostgreSQL](/project-guides/react-express-postgresql). **Nguồn chính thức:** [Cài đặt](https://expressjs.com/en/starter/installing.html) · [Xử lý lỗi](https://expressjs.com/en/guide/error-handling.html) · [Migration Express 5](https://expressjs.com/en/guide/migrating-5.html).
+498	version: Git 2.x · Cộng tác trên GitHub
+500	Trang cung cấp nội dung khởi đầu theo cấu trúc chung. Ví dụ chi tiết và phần xử lý lỗi mở rộng còn đang biên soạn. Xem các bài liên quan để thực hành có đầy đủ ngữ cảnh.
+501	Git ghi lịch sử source trên máy; GitHub lưu repository và hỗ trợ cộng tác. Dùng branch và commit đã rà soát để thay đổi dễ hiểu và khôi phục được.
+502	Cài Git, cấu hình danh tính commit. Chỉ cần tài khoản GitHub khi đẩy lên GitHub; commit trên máy không cần tài khoản.
+503	Cài từ [git-scm.com](https://git-scm.com/downloads). Chạy `git --version` trong terminal mới. Đặt tên, email của bạn ở phạm vi repository hoặc toàn cục tùy nhu cầu.
+504	Tại gốc dự án mới, chạy `git init`, tạo `.gitignore`, stage file cụ thể và commit. Cấu hình remote bằng URL repository bạn sở hữu.
+505	Dùng `.gitignore` cho dependency, bản build và `.env`. Danh tính Git là metadata commit, không phải thông tin xác thực; dùng quy trình xác thực GitHub hỗ trợ khi push.
+506	Theo dõi source, tài liệu, ví dụ và lockfile. Giữ credential, cache, volume database và file sinh ra lớn ngoài Git.
+507	Chạy trong thư mục dự án đã khởi tạo, sau khi hoàn thành thiết lập được liên kết:
+508	Đọc diff đã stage, viết commit nhỏ có mục đích và xem thay đổi upstream trước khi công bố branch. Không đưa token vào URL remote.
+509	Push bị từ chối: fetch và xem thay đổi remote trước khi tích hợp. Lỡ đưa secret vào Git: thu hồi secret trước, rồi làm theo hướng dẫn xóa khỏi lịch sử của nhà cung cấp; chỉ xóa file hiện tại là chưa đủ.
+510	Lịch sử và branch trên máy linh hoạt. Viết lại lịch sử đã chia sẻ cần thống nhất với nhóm; ưu tiên commit sửa bổ sung cho nội dung đã công bố.
+511	**Nguồn chính thức:** [Sách Git](https://git-scm.com/book/en/v2). **Liên quan:** [Tài liệu GitHub](https://docs.github.com/en) · [Lệnh thường dùng](/references/quick-commands).
+513	version: JavaScript hiện đại · ESM
+515	JavaScript chạy trên trình duyệt và Node.js. Dùng cho giao diện tương tác, script và code server.
+516	Cài [Node.js](/technologies/nodejs/) để thực hành trong terminal; thực hành trên trình duyệt chỉ cần công cụ phát triển.
+517	Trình duyệt tích hợp JavaScript. Để chạy file trên máy, theo hướng dẫn cài Node thay vì tìm package JavaScript toàn cục.
+518	Trong thư mục mới `js-lab`, tạo `index.mjs` chứa `console.log('Hello handbook')`. Chạy `node index.mjs` tại đó; mong đợi thông điệp được in ra.
+519	Dùng `.mjs` để xác định ESM hoặc khai báo `"type": "module"` trong `package.json`. Bài này không cần biến môi trường.
+520	Bắt đầu với `src/` chứa module, `test/` chứa kiểm thử hành vi. Tách code DOM chỉ dùng trên trình duyệt khỏi code file hệ thống chỉ dùng trong Node.
+521	Mặc định dùng `const`, xử lý promise bị reject và trả dữ liệu mới khi cập nhật state giao diện. Kiểm tra đầu vào bên ngoài.
+522	`document is not defined` cho biết code trình duyệt chạy trong Node. `require is not defined` thường do chạy CommonJS dưới ESM; dùng `import` hoặc ranh giới `.cjs` rõ ràng.
+523	Dễ bắt đầu và được hỗ trợ rộng. Khi không có kiểu tĩnh, quy ước và kiểm tra runtime càng quan trọng. Kết hợp [TypeScript](/technologies/typescript/) khi hợp đồng dữ liệu phức tạp hơn.
+524	**Tham khảo:** [Hướng dẫn JavaScript của MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide). **Liên quan:** [Node.js](/technologies/nodejs/) · [React](/technologies/react/).
+526	version: Trình biên tập workflow tự vận hành · Docker Compose v2
+528	n8n kết nối trigger và hành động thành workflow. Dùng cho tích hợp, tác vụ định kỳ và thử nghiệm low-code. Tự vận hành cho phép kiểm soát hệ thống nhưng bạn chịu trách nhiệm nâng cấp và khôi phục. Kiểm tra điều khoản giấy phép khi nhúng hoặc cung cấp cho người khác.
+529	Cài [Docker và Compose v2](/technologies/docker/). Biết đọc log và bảo toàn volume. Đây là cấu hình **trình biên tập workflow trên máy**, dùng SQLite, chưa có AI sandbox hoặc task runner bên ngoài. Không dùng trực tiếp làm triển khai mở ra Internet.
+530	Theo cách Compose trong [tự chạy n8n](/project-guides/n8n-compose), gồm đầy đủ `.env.example`, `compose.yaml`, lệnh chạy, kiểm tra và dừng. Không cần cài Node hoặc package n8n toàn cục.
+531	Tạo thư mục riêng `n8n-local` và theo bài đó. Sau khi chạy:
+532	1. Mở `http://localhost:5678` và thiết lập tài khoản chủ sở hữu.
+533	2. Tạo workflow có **Manual Trigger**.
+534	3. Nối node **Edit Fields (Set)**; thêm chuỗi `message` có giá trị `Hello handbook`.
+535	4. Chạy workflow và xem đầu ra node.
+536	5. Lưu workflow. Xuất JSON để quản lý phiên bản sau khi kiểm tra không chứa secret.
+537	Kết quả mong đợi: node cuối trả một item có thông điệp đã cấu hình. Nhãn giao diện có thể khác theo phiên bản n8n. Ví dụ không cần credential bên ngoài.
+538	Đặt các biến sau trong `.env.example`, rồi sao chép vào `.env` trên máy trước khi chạy:
+539	Bài dùng image `latest` biến động chỉ cho lần chạy đầu trên máy. Ghi phiên bản bằng `docker compose exec n8n n8n --version`, rồi thay `latest` bằng phiên bản đó trước khi cần nâng cấp có thể tái lập.
+540	Thư mục mount `/home/node/.n8n` lưu SQLite và khóa mã hóa được tự tạo. Giữ toàn bộ volume. Backup database thiếu khóa có thể khiến credential không dùng được. Khi triển khai công khai, dùng HTTPS và cấu hình URL trình biên tập/webhook, reverse proxy theo tài liệu chính thức.
+541	Named volume Docker nằm ngoài cây source. File xuất workflow hữu ích cho tài liệu và quản lý phiên bản nhưng không phải backup đầy đủ của instance.
+542	Kiểm tra trình biên tập mở được sau `start` và workflow còn tồn tại. Khi nâng cấp, backup trước, chọn phiên bản image đã rà soát trong `.env`, chạy `docker compose pull`, rồi `docker compose up -d`. Migration database có thể khiến hạ image không an toàn; cần kế hoạch khôi phục backup.
+543	- Xây dựng và thử workflow thủ công trước khi nối trigger production.
+544	- Lưu credential trong kho credential của n8n, không viết chuỗi bí mật trong node.
+545	- Đặt tên workflow rõ ràng, ghi đầu vào và tác động phụ.
+546	- Thiết kế retry an toàn: chạy lặp lại không tạo trùng thanh toán hoặc bản ghi.
+547	- Giới hạn thời gian lưu execution và tránh giữ payload nhạy cảm không cần thiết.
+548	- Backup dữ liệu cùng thông tin mã hóa; thử khôi phục vào instance riêng.
+549	- Đánh giá PostgreSQL và cơ chế cô lập runner được hỗ trợ trước khi dùng production.
+550	| Triệu chứng | Nguyên nhân có thể | Cách xử lý |
+551	| Không mở được trình biên tập | Container chưa sẵn sàng hoặc trùng cổng | Đọc log, `docker compose ps`; kiểm tra cổng 5678 |
+552	| Cảnh báo secure cookie trên máy | HTTP và cấu hình cookie không khớp | Dùng cấu hình loopback của bài; production dùng HTTPS |
+553	| Lịch chạy sai giờ | Múi giờ workflow hoặc instance | Kiểm tra cấu hình workflow và `GENERIC_TIMEZONE` |
+554	| Webhook chỉ chạy khi thử nghiệm | Bên gọi dùng URL test | Dùng URL production, bật/publish workflow theo phiên bản |
+555	| Credential lỗi sau khôi phục | Thiếu khóa mã hóa gốc | Khôi phục thông tin mã hóa từ cùng bản backup |
+556	n8n giúp nhìn rõ tích hợp và chỉnh sửa nhanh. Workflow lớn có thể khó rà soát, kiểm thử; dịch vụ riêng cho phép kiểm soát tốt hơn với nghiệp vụ phức tạp. Tự vận hành cần quản lý lưu trữ, bảo mật và tính sẵn sàng.
+557	**Tiếp theo:** [Bài Compose đầy đủ](/project-guides/n8n-compose). **Nguồn chính thức:** [Cài Docker Compose](https://docs.n8n.io/deploy/host-n8n/install-options/install-using-docker-compose) · [Tra cứu biến môi trường](https://docs.n8n.io/hosting/configuration/environment-variables/deployment/) · [Tài liệu workflow](https://docs.n8n.io/workflows/).
+559	version: App Router · TypeScript · Scaffold được tạo
+561	Framework React có kết xuất trên server, routing và endpoint server. Dùng khi ứng dụng trình duyệt cần chức năng phía server.
+562	Dùng Node.js còn được hỗ trợ, đáp ứng 22.12+, và hiểu [React](/technologies/react/). Kiểm tra yêu cầu engine chặt hơn trong scaffold được tạo.
+563	Dùng scaffold `create-next-app` chính thức. Bài đầy đủ bên dưới có tham số và file; không trộn hướng dẫn Pages Router vào ứng dụng App Router.
+564	Theo [ứng dụng Next.js full stack](/project-guides/nextjs-fullstack) để tạo trang kết xuất cùng route server có bước tự kiểm tra.
+565	Giữ cấu hình TypeScript và Next được tạo. Giá trị chỉ dùng trên server đặt trong `.env.local`, ghi tên biến trong `.env.example`; biến `NEXT_PUBLIC_` có thể thấy ở trình duyệt.
+566	Dùng `src/app/` cho route và layout, `src/components/` cho UI dùng chung, `src/lib/` cho tiện ích server/client có ranh giới rõ ràng.
+567	Giữ component trên server trừ khi cần tương tác trình duyệt. Thêm `use client` tại ranh giới nhỏ nhất cần thiết. Kiểm tra request trước khi ghi dữ liệu.
+568	Event handler trong Server Component cần ranh giới Client Component. Route bị thiếu thường do file nằm ngoài thư mục `app/` được chọn.
+569	Chức năng full stack tích hợp giúp giảm công sức kết nối, nhưng cần hiểu cache và ranh giới server/client.
+570	**Nguồn chính thức:** [Tài liệu Next.js](https://nextjs.org/docs/app). **Liên quan:** [Bài full stack](/project-guides/nextjs-fullstack) · [React](/technologies/react/).
+572	version: Node.js 22.12+ · ESM · Nạp môi trường tích hợp
+574	Node.js chạy JavaScript ngoài trình duyệt. Dùng cho API, script, công cụ và dịch vụ mạng. Event loop xử lý I/O tốt; công việc nặng CPU nên chuyển sang worker hoặc dịch vụ riêng.
+575	Dùng Node LTS còn được hỗ trợ, đáp ứng **22.12+**. npm đi kèm Node. Mốc này hỗ trợ watch và `--env-file` bên dưới, không phải phiên bản tối thiểu cho mọi API Node.
+576	Cài Node theo [hướng dẫn tải chính thức](https://nodejs.org/en/download) cho hệ điều hành, hoặc trình quản lý phiên bản phù hợp. Trong terminal mới:
+577	Nếu không tìm thấy lệnh, mở lại terminal và kiểm tra PATH. Xác định chương trình đang chạy trước khi kết hợp nhiều cách cài đặt.
+578	Trong thư mục cha thực hành:
+579	Sao chép thành `.env` tại `node-api`. Bash: `cp .env.example .env`. PowerShell: `Copy-Item .env.example .env`. Thêm `.env` và `node_modules/` vào `.gitignore`.
+580	Development nạp `.env` rõ ràng. Script `start` production chờ host cấp biến môi trường. Chỉ để thử production trên máy, dùng `node --env-file=.env src/server.js`.
+581	Giữ `server.js` tập trung vào khởi chạy. Tách xử lý request sang module riêng khi thêm tính năng hoặc kiểm thử độc lập.
+582	Tại `node-api`:
+583	Trong terminal khác, `curl http://localhost:3000/health` cần trả `{"status":"ok"}`. Windows PowerShell dùng `curl.exe` hoặc mở URL trong trình duyệt. Đường dẫn không có cần trả HTTP 404. Ví dụ không cần build và không cài dependency ứng dụng.
+584	- Dùng import `node:` cho module tích hợp và khai báo loại module rõ ràng.
+585	- Xử lý promise bị reject, kiểm tra cấu hình khi khởi chạy nếu có thêm thiết lập.
+586	- Không ghi mật khẩu, token hoặc toàn bộ authorization header vào log.
+587	- Đưa lockfile vào Git khi có dependency; dùng `npm ci` trong CI.
+588	- Đóng listener và kết nối bên ngoài khi dừng.
+589	- Với dịch vụ thực tế, thêm request timeout, giới hạn payload và log có cấu trúc.
+590	| Triệu chứng | Kiểm tra | Cách sửa |
+591	| Cannot use import outside a module | `package.json` | Thêm `"type": "module"` hoặc dùng `.mjs` |
+592	| Không tìm thấy `.env` | Thư mục hiện tại của terminal | Chạy từ `node-api`; tạo file trước `npm run dev` |
+593	| EADDRINUSE | Tiến trình khác chiếm cổng | Dừng server trước đó hoặc đổi `PORT` |
+594	| Trình duyệt không gọi được container | Địa chỉ lắng nghe và cổng đã mở | Lắng nghe trên `0.0.0.0`; mở cổng container |
+595	| `node --check` thành công nhưng ứng dụng lỗi | Kiểm tra cú pháp không thực thi | Chạy tiến trình và gọi `/health` |
+596	Node giúp thống nhất công cụ JavaScript và xây dựng dịch vụ I/O. Cần chú ý lỗi bất đồng bộ và thao tác chặn. Framework như [Express](/technologies/express/) hỗ trợ routing thuận tiện khi dịch vụ phát triển.
+597	**Tiếp theo:** [Đóng gói server bằng container](/project-guides/docker-nodejs). **Nguồn chính thức:** [Giới thiệu](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) · [File môi trường](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs) · [HTTP API](https://nodejs.org/api/http.html).
+599	version: Phiên bản thực hành PostgreSQL 17
+601	Cơ sở dữ liệu quan hệ cho dữ liệu có cấu trúc, ràng buộc, join và transaction. Dùng khi cần tính đúng đắn và quan hệ dữ liệu bền vững.
+602	Cài [Docker](/technologies/docker/) để chạy database độc lập theo handbook hoặc cài PostgreSQL bằng hướng dẫn chính thức cho hệ điều hành.
+603	[Bài React full stack](/project-guides/react-express-postgresql) chạy service `postgres:17` trên máy với lưu trữ bền vững và health check.
+604	Theo bài đó để định nghĩa database, áp dụng `schema.sql` và xem bản ghi qua `psql` trước khi nối API.
+605	Ghi `DATABASE_URL` trong `.env.example`; cấp credential riêng tư. Bài dùng đường dẫn volume PostgreSQL 17, khác mặc định của 18+.
+606	Lưu SQL theo phiên bản trong `db/` hoặc `migrations/`, tách thay đổi schema thành file nhỏ và giữ backup ngoài repository source.
+607	Dùng truy vấn tham số hóa, transaction cho các thao tác ghi liên quan và constraint để áp quy tắc dữ liệu. Kiểm tra backup bằng cách khôi phục.
+608	Kết nối bị từ chối: kiểm tra dịch vụ sẵn sàng và cổng. Xác thực thất bại: so credential với lúc volume được khởi tạo. Đổi `.env` không đặt lại người dùng database đã có.
+609	Hỗ trợ transaction mạnh và SQL phong phú. Cần kế hoạch migration, index, giám sát và quản lý lưu trữ.
+610	**Nguồn chính thức:** [Tài liệu PostgreSQL](https://www.postgresql.org/docs/17/). **Liên quan:** [React + Express + PostgreSQL](/project-guides/react-express-postgresql) · [Docker](/technologies/docker/).
+612	version: Nội dung đang biên soạn · Chọn major trước khi thiết lập
+614	Prisma cung cấp schema, quy trình migration và database client được sinh tự động. Giúp truy vấn trong ứng dụng dễ kiểm tra kiểu và khám phá hơn.
+615	Hiểu [TypeScript](/technologies/typescript/) và [PostgreSQL](/technologies/postgresql/). Kiểm tra yêu cầu Node của major Prisma đã chọn.
+616	Bắt đầu từ [tài liệu Prisma 7 theo phiên bản](https://www.prisma.io/docs/orm/v7). Trang đang biên soạn chưa đưa ra lệnh cài chưa xác minh giữa các major thay đổi.
+617	Chọn major phù hợp, theo quickstart PostgreSQL của major đó rồi ghi phiên bản CLI/client cụ thể trong lockfile. Xác nhận kết nối bằng một truy vấn trước khi thêm tính năng.
+618	Giữ connection string chỉ trên server, ghi tên biến trong `.env.example`. Cấu hình Prisma và driver thay đổi theo major; dùng đúng tài liệu tương ứng.
+619	Nhóm schema và migration dưới `prisma/`; giữ client dùng chung phía server trong `src/lib/`. Không tạo connection pool mới cho từng request.
+620	Rà soát SQL được sinh, tách việc tạo migration development khỏi áp dụng migration production và đồng bộ phiên bản CLI/client.
+621	Client cũ: sinh lại theo hướng dẫn major đã cài. Kết nối lỗi: thử database độc lập trước khi đổi schema.
+622	Truy cập có kiểu và truy vấn dễ khám phá là ưu điểm. Client sinh tự động, trạng thái migration và đổi major làm tăng bảo trì. Bài full stack dùng SQL với `pg` để tập trung vào quy trình kết nối.
+623	**Nguồn chính thức:** [Tài liệu Prisma](https://www.prisma.io/docs/orm/v7). **Liên quan:** [PostgreSQL](/technologies/postgresql/) · [TypeScript](/technologies/typescript/).
+625	version: Function component React · Template Vite react-ts
+627	React tổ chức giao diện thành component. Dùng cho ứng dụng trình duyệt tương tác với UI tái sử dụng và state dùng chung. Bài này dùng Vite kết xuất phía client; chọn framework như [Next.js](/technologies/nextjs/) khi cần tích hợp kết xuất server.
+628	Hiểu hàm, mảng và module JavaScript. Cài Node.js **22.12+** cùng npm, kiểm tra `node --version`. Đọc [TypeScript](/technologies/typescript/) nếu chưa quen `.tsx`.
+629	Tại thư mục cha thực hành, tạo ứng dụng từ scaffold Vite React/TypeScript:
+630	Lệnh đầu tạo source và công cụ; `npm install` tải dependency, ghi lockfile. `@latest` phụ thuộc thời điểm: xem `package.json` và yêu cầu engine được tạo trước khi chấp nhận nâng cấp.
+631	Tại `my-react-app`, thay `src/App.tsx`:
+632	Chạy `npm run dev`, mở URL Vite hiển thị. Bấm nút cần tăng số đếm. Giữ `src/main.tsx` từ scaffold; file gắn ứng dụng vào `index.html`.
+633	Giữ `vite.config.ts`, `tsconfig.app.json`, `tsconfig.node.json` được tạo. Vite build ứng dụng; TypeScript kiểm tra kiểu. Tạo `.env.example` nếu trình duyệt cần cấu hình công khai:
+634	Sao chép thành `.env` trên máy, đọc qua `import.meta.env.VITE_API_BASE_URL`. Khởi động lại Vite sau khi đổi file môi trường. Giá trị được công khai và nhúng khi build. Xem [biến môi trường Vite](https://vite.dev/guide/env-and-mode).
+635	Bắt đầu đơn giản; chỉ thêm thư mục tính năng khi có chức năng thực tế cần nhóm.
+636	Chạy tại gốc ứng dụng:
+637	`npm run build` cần tạo `dist/`. Preview dùng để kiểm tra. Triển khai `dist/` lên hosting tĩnh, cấu hình history fallback nếu thêm routing phía client.
+638	- Giữ component tập trung; truyền dữ liệu qua props trước khi thêm global state.
+639	- Dùng ID ổn định làm key danh sách. Gọi hook ở cấp cao nhất của component.
+640	- Tính giá trị suy ra khi render thay vì sao chép vào state.
+641	- Dùng cập nhật state dạng hàm nếu giá trị mới phụ thuộc giá trị cũ.
+642	- Dùng effect để đồng bộ hệ thống bên ngoài, có cleanup cho subscription.
+643	- Cung cấp nhãn hiển thị, nút đúng ngữ nghĩa, trạng thái tải và lỗi.
+644	| Triệu chứng | Nguyên nhân có thể | Cách sửa |
+645	| Invalid hook call | Hook ngoài component hoặc có nhiều bản React | Xem vị trí hook; chạy `npm ls react react-dom` |
+646	| Trang trắng | Lỗi runtime hoặc sai phần tử gắn ứng dụng | Đọc console trình duyệt; so `main.tsx` với `index.html` |
+647	| State không đổi trên giao diện | Sửa trực tiếp object hiện có | Trả object hoặc mảng mới qua hàm cập nhật state |
+648	| Biến môi trường là undefined | Thiếu `VITE_` hoặc server chưa cập nhật | Kiểm tra vị trí file và khởi động lại Vite |
+649	| Route chỉ chạy khi điều hướng nội bộ | Hosting thiếu history fallback | Chuyển route client chưa biết về `index.html` |
+650	React phù hợp giao diện tương tác theo component và có hệ sinh thái lớn. Ứng dụng client thuần vẫn cần chọn routing, tải dữ liệu, kiểm thử và kết xuất server. Với tài liệu tĩnh nhỏ, bộ công cụ này có thể không cần thiết.
+651	**Tiếp theo:** [React + TypeScript + Vite](/project-guides/react-typescript-vite) · [React full stack](/project-guides/react-express-postgresql). **Nguồn chính thức:** [Học React](https://react.dev/learn) · [Bắt đầu từ đầu](https://react.dev/learn/build-a-react-app-from-scratch).
+653	version: TypeScript 5.7+ · Ví dụ Node ESM
+655	TypeScript thêm kiểm tra tĩnh cho JavaScript. Dùng để phát hiện cấu trúc dữ liệu không khớp và hỗ trợ refactor. Kiểu bị xóa khi biên dịch, không xác thực JSON mạng hoặc biến môi trường lúc chạy.
+656	Cài Node.js **22.12+**, npm; hiểu module và hàm JavaScript. Ví dụ biên dịch cho Node ESM; dự án trình duyệt nên giữ cấu hình TypeScript của framework.
+657	Compiler cài trong dự án giúp cả nhóm dùng phiên bản trong lockfile. Khai báo Node mô tả API tích hợp. `@5` giữ trong họ 5.x; đánh giá nâng major riêng.
+658	Tạo `src/index.ts`:
+659	Thêm script tại gốc ứng dụng:
+660	Tạo `tsconfig.json`:
+661	`strict` bật kiểm tra chặt hơn. `NodeNext` theo quy tắc module Node, gồm khai báo ESM của package. Import file nội bộ với đuôi đầu ra, ví dụ `import { task } from './task.js'` ngay trong TypeScript. Dự án Vite trình duyệt thường dùng `moduleResolution: "Bundler"`; không sao chép cấu hình Node tùy tiện.
+662	Tại `typed-app` sau khi tạo cấu hình:
+663	Đầu ra mong đợi của `npm start`: `1: Đọc handbook`. Để thử lỗi, gán chuỗi cho `task.id`; `npm run check` cần thất bại. Hoàn tác trước khi build.
+664	- Bật strict từ đầu; thu hẹp `unknown` trước khi dùng.
+665	- Mô hình hóa trạng thái hợp lệ bằng union thay vì các thuộc tính optional rời rạc.
+666	- Ưu tiên suy luận kiểu cho biến nội bộ, hợp đồng rõ ràng tại ranh giới module.
+667	- Xem assertion `as` là cam kết cần chứng minh, không phải chuyển đổi dữ liệu.
+668	- Kiểm tra đầu vào ngoài ở runtime rồi mới trả kết quả có kiểu.
+669	- Tách file môi trường khỏi cấu hình compiler; ví dụ này không cần `.env`.
+670	| Lỗi | Nguyên nhân | Cách xử lý |
+671	| TS2322: not assignable | Giá trị không thỏa kiểu | Xem giá trị nguồn; sửa hợp đồng thay vì thêm `any` |
+672	| Cannot find name `process` | Thiếu hoặc loại trừ kiểu Node | Cài `@types/node`, kiểm tra `types` |
+673	| Import tương đối yêu cầu đuôi file | Phân giải Node ESM | Dùng `.js` trong import tương đối |
+674	| Kiểm tra kiểu qua nhưng JSON lỗi | Kiểu bị xóa khi chạy | Thêm kiểm tra runtime tại ranh giới |
+675	| Thay đổi chưa có trong `dist` | Build lỗi hoặc sai cấu hình | Chạy `npm run build`; xem `--showConfig` |
+676	TypeScript giúp bảo trì codebase lớn và cải thiện gợi ý editor. Đổi lại cần cấu hình compiler và không bảo đảm dữ liệu runtime hợp lệ. JavaScript có thể đơn giản hơn cho script nhỏ dùng tạm.
+677	**Tiếp theo:** [React có kiểu dữ liệu](/project-guides/react-typescript-vite) · [Node.js](/technologies/nodejs/). **Nguồn chính thức:** [Handbook](https://www.typescriptlang.org/docs/handbook/intro.html) · [Tra cứu tsconfig](https://www.typescriptlang.org/tsconfig/) · [tsconfig.json là gì?](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
+678	title: TÊN DỰ ÁN
+679	version: PHIÊN BẢN CÔNG NGHỆ · Rà soát YYYY-MM-DD
+680	# TÊN DỰ ÁN
+681	Mô tả kết quả cụ thể và phạm vi.
+682	Liên kết trang công nghệ thay vì lặp phần giải thích.
+683	Ghi phiên bản công cụ, file đã có, cổng và lệnh kiểm tra.
+684	Nêu thư mục bắt đầu. Liệt kê lệnh theo thứ tự thực thi.
+685	Cung cấp `.env.example`, cách sao chép và thay giá trị mẫu.
+686	Hiển thị đủ file cần để đạt kết quả.
+687	Giải thích source tối thiểu đầy đủ và đường dẫn tương ứng.
+688	Nêu thư mục của từng terminal, bước kiểm tra thành công và thất bại.
+689	Ghi triệu chứng, nguyên nhân, cách chẩn đoán, cách sửa an toàn và bước kiểm tra lại.
+690	Thêm danh sách kiểm tra ngắn và bước cần làm trước production. Liên kết tài liệu chính thức. Ghi rõ ví dụ đã chạy ở đâu hoặc đánh dấu **Chưa kiểm thử**.
+691	title: TÊN CÔNG NGHỆ
+692	version: PHIÊN BẢN CÔNG NGHỆ · Rà soát YYYY-MM-DD
+693	# TÊN CÔNG NGHỆ
+694	Mô tả phần đã có và phần còn dự kiến. Bỏ thông báo khi hoàn thiện nội dung; vẫn giữ nhãn Chưa kiểm thử nếu chưa chạy ví dụ.
+695	Công nghệ làm gì, khi nào phù hợp và vì sao nên dùng?
+696	Ghi phiên bản, công cụ, kiến thức cần có và lệnh kiểm tra.
+697	Liên kết hướng dẫn chính thức theo hệ điều hành hoặc lệnh cài đã xác minh.
+698	Bắt đầu từ thư mục cha có tên cụ thể. Ghi lệnh theo thứ tự và file cần tạo.
+699	Giải thích cấu hình quan trọng và `.env.example`. Tách development khỏi production.
+700	Đưa cây thư mục nhỏ và giải thích ranh giới quan trọng.
+701	Nêu thư mục, mục đích, đầu ra mong đợi và cách kiểm tra cài đặt thành công. Ghi rõ trạng thái kiểm thử.
+702	Ghi quy ước cụ thể giúp tránh lỗi thực tế.
+703	Ghi triệu chứng, nguyên nhân có thể, lệnh chẩn đoán, cách sửa bảo toàn dữ liệu và bước kiểm tra lại.
+704	Ghi ưu điểm, giới hạn và tình huống phù hợp. Liên kết nguồn chính thức và hướng dẫn liên quan.
