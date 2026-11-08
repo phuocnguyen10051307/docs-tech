@@ -24,7 +24,22 @@ export default defineConfig({
     ],
     sidebar: [
       { text: 'BẮT ĐẦU', items: [{ text: 'Trang chủ sổ tay', link: '/' }, { text: 'Bắt đầu sử dụng', link: '/getting-started' }] },
-      { text: 'CÔNG NGHỆ', collapsed: false, items: technologies.map(t => ({ text: t.name, link: `/technologies/${t.slug}/` })) },
+      { text: 'CÔNG NGHỆ', collapsed: false, items: technologies.map(t => ({
+        text: t.name,
+        link: `/technologies/${t.slug}/`,
+        ...(t.slug === 'docker' ? {
+          collapsed: true,
+          items: [
+            { text: 'Level 1: Kiến trúc và CLI', link: '/technologies/docker/fundamentals' },
+            { text: 'Dockerfile, layer và cache', link: '/technologies/docker/images-and-dockerfiles' },
+            { text: 'Compose, mạng và dữ liệu', link: '/technologies/docker/compose-networking-storage' },
+            { text: 'Vận hành và bảo mật', link: '/technologies/docker/operations-security' },
+            { text: 'Bài 1: Nginx và HTML', link: '/project-guides/docker-nginx' },
+            { text: 'Bài 2: Express REST API', link: '/project-guides/docker-nodejs' },
+            { text: 'Bài 3: Express + PostgreSQL', link: '/project-guides/docker-express-postgresql' }
+          ]
+        } : {})
+      })) },
       { text: 'THỰC HÀNH DỰ ÁN', collapsed: true, items: [{ text: 'Tất cả hướng dẫn dự án', link: '/project-guides/' }, ...projectGuides.map(g => ({ text: g.title, link: `/project-guides/${g.slug}` }))] },
       { text: 'TRA CỨU NHANH', items: [{ text: 'Lệnh thường dùng', link: '/references/quick-commands' }, { text: 'Lỗi thường gặp và cách xử lý', link: '/references/common-errors' }, { text: 'Ghi chú phiên bản', link: '/references/versions' }, { text: 'Biên soạn tài liệu', link: '/references/contributing' }] }
     ],

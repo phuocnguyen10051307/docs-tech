@@ -48,11 +48,11 @@ Dùng dấu `/` ở đầu và cuối. Với Pages theo repository, tải `dist/
 ## Nội dung hiện có
 
 - Sidebar, mục lục bên phải, menu di động, đường dẫn điều hướng và chế độ sáng/tối.
-- Trang chủ có bộ lọc cho 11 công nghệ, năm hướng dẫn dự án và tài liệu tra cứu nhanh.
+- Trang chủ có bộ lọc cho 11 công nghệ, bảy hướng dẫn dự án và tài liệu tra cứu nhanh.
 - Tìm kiếm tại trình duyệt từ Markdown, tô màu cú pháp và nút sao chép code.
 - Hướng dẫn nhập môn cho React, TypeScript, Node.js, Express, Docker và n8n.
 - Các trang đang biên soạn được đánh dấu rõ cho JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub.
-- Năm hướng dẫn dự án có cấu hình môi trường mẫu, danh sách kiểm tra, ghi chú phiên bản và nguồn chính thức; các ví dụ ứng dụng chưa kiểm thử được ghi rõ trên trang.
+- Bảy hướng dẫn dự án có cấu hình môi trường mẫu, danh sách kiểm tra, ghi chú phiên bản và nguồn chính thức; các ví dụ ứng dụng chưa kiểm thử được ghi rõ trên trang.
 - Mẫu tài liệu tái sử dụng cho công nghệ và dự án.
 
 ## Cấu trúc thư mục
@@ -78,7 +78,7 @@ developer-handbook/               # Gốc repository này (tên thư mục trên
 │   │   ├── prisma/
 │   │   ├── n8n/
 │   │   └── git/
-│   ├── project-guides/           # Trang danh mục và năm bài thực hành
+│   ├── project-guides/           # Trang danh mục và bảy bài thực hành
 │   ├── references/               # Lệnh, lỗi, phiên bản và quy ước biên soạn
 │   └── public/                   # Favicon và tài nguyên tĩnh
 ├── templates/                    # Mẫu biên soạn để sao chép, không xuất bản

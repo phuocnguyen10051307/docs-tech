@@ -55,6 +55,6 @@ Dùng nút tìm kiếm hoặc **Ctrl+K / Cmd+K** để tra chỉ mục được 
 
 ## Phạm vi nội dung và phiên bản
 
-React, TypeScript, Node.js, Express, Docker và n8n có hướng dẫn nhập môn. JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub có nội dung khởi đầu, được đánh dấu **Đang biên soạn**. Năm bài dự án có trình tự riêng; không suy ra ví dụ đã được chạy thử từ trạng thái biên soạn của trang.
+React, TypeScript, Node.js, Express, Docker và n8n có hướng dẫn nhập môn. JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub có nội dung khởi đầu, được đánh dấu **Đang biên soạn**. Bảy bài dự án có trình tự riêng; không suy ra ví dụ đã được chạy thử từ trạng thái biên soạn của trang.
 
 Xem [ghi chú phiên bản](/references/versions) để biết phiên bản giả định và phạm vi kiểm tra. Để mở rộng handbook, đọc [biên soạn tài liệu](/references/contributing).

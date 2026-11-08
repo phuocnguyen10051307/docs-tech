@@ -16,7 +16,7 @@ const visible = computed(() => technologies.filter(t => active.value === 'Tất 
         <h1 id="home-title">Tra cứu gọn.<br><span>Thực hành nhanh.</span></h1>
         <p>Những lệnh hay quên. Những bước cài đặt thường lặp lại.<br class="desktop-break"> Kiến thức phát triển hằng ngày, tập hợp tại một nơi.</p>
         <div class="hero-actions"><a class="primary-action" :href="withBase('/getting-started')">Khám phá sổ tay <span aria-hidden="true">→</span></a><a class="secondary-action" :href="withBase('/references/quick-commands')"><span aria-hidden="true">⌁</span> Lệnh thường dùng</a></div>
-        <div class="hero-proof"><span>11 công nghệ</span><i></i><span>5 bài thực hành</span><i></i><span>Thuận tiện tra cứu</span></div>
+        <div class="hero-proof"><span>11 công nghệ</span><i></i><span>{{ projectGuides.length }} bài thực hành</span><i></i><span>Thuận tiện tra cứu</span></div>
       </div>
       <div class="terminal-card" aria-label="Ví dụ khởi tạo dự án React, chưa kiểm thử">
         <div class="terminal-bar"><div class="terminal-dots"><i></i><i></i><i></i></div><span>your-next-project / terminal</span><span>⌘</span></div>

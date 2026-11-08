@@ -1,6 +1,6 @@
 ---
 title: Hướng dẫn dự án
-version: Năm lộ trình thực hành · Handbook 1.0
+version: Bảy lộ trình thực hành · Handbook 1.0
 ---
 
 # Thực hành xây dựng dự án
@@ -12,7 +12,9 @@ Mỗi bài bắt đầu trong thư mục mới, giải thích môi trường và
 | [React + TypeScript + Vite](./react-typescript-vite) | Bộ đếm có kiểu dữ liệu và bản build production | 10 phút |
 | [React + Express + PostgreSQL](./react-express-postgresql) | Giao diện đọc ghi chú từ cơ sở dữ liệu | 25 phút |
 | [Ứng dụng Next.js full stack](./nextjs-fullstack) | Trang kết xuất trên server và route JSON | 15 phút |
-| [Đóng gói Node.js bằng Docker](./docker-nodejs) | Container không dùng root, có endpoint kiểm tra sức khỏe | 15 phút |
+| [Docker bài 1: Nginx và HTML](./docker-nginx) | HTML tự viết qua bind mount, port và log | 25 phút |
+| [Docker bài 2: Express REST API](./docker-nodejs) | Image non-root, REST API, healthcheck và vòng đời cập nhật | 45 phút |
+| [Docker bài 3: Express + PostgreSQL](./docker-express-postgresql) | DNS, mạng riêng, dữ liệu bền vững, backup và restore thử | 90 phút |
 | [Tự chạy n8n bằng Docker Compose](./n8n-compose) | Trình biên tập workflow với dữ liệu lưu bền vững | 15 phút |
 
 ## Danh sách kiểm tra chung
