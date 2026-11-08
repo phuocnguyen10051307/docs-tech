@@ -38,6 +38,21 @@ export default defineConfig({
             { text: 'Bài 2: Express REST API', link: '/project-guides/docker-nodejs' },
             { text: 'Bài 3: Express + PostgreSQL', link: '/project-guides/docker-express-postgresql' }
           ]
+        } : t.slug === 'n8n' ? {
+          collapsed: true,
+          items: [
+            { text: 'Level 1: Editor và trigger', link: '/technologies/n8n/fundamentals' },
+            { text: 'JSON, item và expression', link: '/technologies/n8n/data-and-expressions' },
+            { text: 'HTTP Request và REST API', link: '/technologies/n8n/http-and-apis' },
+            { text: 'Thiết kế và xử lý lỗi', link: '/technologies/n8n/workflow-design' },
+            { text: 'PostgreSQL, Google và Telegram', link: '/technologies/n8n/integrations' },
+            { text: 'AI Agent có kiểm soát', link: '/technologies/n8n/ai-agents' },
+            { text: 'Self-hosting và vận hành', link: '/technologies/n8n/self-hosting' },
+            { text: 'Cài n8n local bằng Compose', link: '/project-guides/n8n-compose' },
+            { text: 'Bài 1: Lịch và API công khai', link: '/project-guides/n8n-scheduled-api' },
+            { text: 'Bài 2: Webhook và PostgreSQL', link: '/project-guides/n8n-webhook-postgres' },
+            { text: 'Bài 3: AI Agent và phê duyệt', link: '/project-guides/n8n-ai-agent' }
+          ]
         } : {})
       })) },
       { text: 'THỰC HÀNH DỰ ÁN', collapsed: true, items: [{ text: 'Tất cả hướng dẫn dự án', link: '/project-guides/' }, ...projectGuides.map(g => ({ text: g.title, link: `/project-guides/${g.slug}` }))] },

@@ -48,11 +48,11 @@ Dùng dấu `/` ở đầu và cuối. Với Pages theo repository, tải `dist/
 ## Nội dung hiện có
 
 - Sidebar, mục lục bên phải, menu di động, đường dẫn điều hướng và chế độ sáng/tối.
-- Trang chủ có bộ lọc cho 11 công nghệ, bảy hướng dẫn dự án và tài liệu tra cứu nhanh.
+- Trang chủ có bộ lọc cho 11 công nghệ, mười hướng dẫn dự án và tài liệu tra cứu nhanh.
 - Tìm kiếm tại trình duyệt từ Markdown, tô màu cú pháp và nút sao chép code.
 - Hướng dẫn nhập môn cho React, TypeScript, Node.js, Express, Docker và n8n.
 - Các trang đang biên soạn được đánh dấu rõ cho JavaScript, Next.js, PostgreSQL, Prisma và Git & GitHub.
-- Bảy hướng dẫn dự án có cấu hình môi trường mẫu, danh sách kiểm tra, ghi chú phiên bản và nguồn chính thức; các ví dụ ứng dụng chưa kiểm thử được ghi rõ trên trang.
+- Mười hướng dẫn dự án có cấu hình môi trường mẫu, danh sách kiểm tra, ghi chú phiên bản và nguồn chính thức; các ví dụ ứng dụng chưa kiểm thử được ghi rõ trên trang.
 - Mẫu tài liệu tái sử dụng cho công nghệ và dự án.
 
 ## Cấu trúc thư mục
@@ -78,7 +78,7 @@ developer-handbook/               # Gốc repository này (tên thư mục trên
 │   │   ├── prisma/
 │   │   ├── n8n/
 │   │   └── git/
-│   ├── project-guides/           # Trang danh mục và bảy bài thực hành
+│   ├── project-guides/           # Trang danh mục và mười bài thực hành
 │   ├── references/               # Lệnh, lỗi, phiên bản và quy ước biên soạn
 │   └── public/                   # Favicon và tài nguyên tĩnh
 ├── templates/                    # Mẫu biên soạn để sao chép, không xuất bản
@@ -99,6 +99,6 @@ Dùng liên kết Markdown từ gốc website (`/technologies/react/`), ghi thư
 
 Repository ghim VitePress **1.6.4**, Vue **3.5.45**, vue-tsc **3.3.14** và override Vite **6.4.5**. Override này nằm ngoài dải Vite 5 mà VitePress 1.x khai báo; kết quả build chỉ phản ánh repository hiện tại. Đọc [ghi chú phiên bản](docs/references/versions.md) trước khi nâng cấp hoặc thêm plugin. Trạng thái lỗ hổng phụ thuộc thời điểm kiểm tra; chạy lại `npm audit` khi cần đánh giá.
 
-Các kiểm tra xác nhận website tài liệu, chưa xác nhận từng ứng dụng trong bài hướng dẫn. Bộ kiểm tra offline không truy cập liên kết ngoài. Các trang đang biên soạn chưa có mức chi tiết như hướng dẫn đầy đủ. Cần rà soát và ghim scaffold `@latest` cũng như image n8n trước khi dùng cho dự án cần tái lập.
+Các kiểm tra xác nhận website tài liệu, chưa xác nhận từng ứng dụng trong bài hướng dẫn. Bộ kiểm tra offline không truy cập liên kết ngoài. Các trang đang biên soạn chưa có mức chi tiết như hướng dẫn đầy đủ. Cần rà soát và ghim scaffold `@latest` trước khi dùng cho dự án cần tái lập; phần n8n đã chọn mốc image/runner cụ thể và nêu giới hạn kiểm thử.
 
 Git đã được khởi tạo tại máy. Chạy handbook không cần remote, triển khai, hệ thống tài khoản hoặc cơ sở dữ liệu.

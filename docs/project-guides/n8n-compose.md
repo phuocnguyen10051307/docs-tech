@@ -1,47 +1,74 @@
----
-title: Tự chạy n8n bằng Docker Compose
-version: Trình biên tập trên máy · SQLite · Compose v2
+﻿---
+title: Cài n8n local bằng Docker Compose
+version: n8n 2.46.6 · SQLite · External task runner · Local
 ---
 
-# Tự chạy n8n bằng Docker Compose
+# Cài n8n local bằng Docker Compose
 
-::: warning Chưa kiểm thử
-Ví dụ ứng dụng trong bài chưa được cài đặt và chạy đầy đủ trong đợt chỉnh sửa này. Các bước dưới đây là hướng dẫn thực hành và kết quả mong đợi; kiểm tra build của website không xác nhận ứng dụng mẫu hoạt động.
+::: warning Chưa kiểm thử runtime
+Docker daemon chưa chạy trong môi trường biên soạn. Pull image, editor, Code node/runner, HTTP health và persistence chưa được chạy end-to-end. Cấu hình dưới đây dành cho lab local; không mở nguyên cấu hình ra Internet.
 :::
+
+**Kiểm tra đã thực hiện:** trích cấu hình từ bài và chạy `docker compose config --quiet` thành công với Compose2.30.3. Chưa pull/run image hoặc kiểm tra editor/runner.
 
 ## Mục tiêu dự án
 
-Chạy trình biên tập workflow n8n trên máy, lưu workflow mẫu và kiểm tra dữ liệu còn sau khi khởi động lại. Cấu hình tối thiểu này không có các dịch vụ AI sandbox tùy chọn, chỉ dành cho học tập trên máy cá nhân.
+Chạy editor n8n trên máy, tạo workflow đầu tiên và giữ dữ liệu qua stop/start. SQLite phù hợp bắt đầu trên một instance. Thêm external task runner để thực hành JavaScript Code node trong tiến trình/container tách khỏi n8n; đây không phải n8n Assistant hay một dịch vụ LLM.
 
 ## Công nghệ sử dụng
 
-[n8n](/technologies/n8n/), [Docker Compose v2](/technologies/docker/), named volume và cơ chế lưu trữ SQLite mặc định của n8n.
+[n8n](/technologies/n8n/), [Docker Compose v2](/technologies/docker/), SQLite, named volume và image runner **cùng phiên bản** n8n. Thông tin mốc 2.46.6, Cloud/Community và giới hạn kiểm thử ở [trang tổng quan](/technologies/n8n/).
 
 ## Yêu cầu trước khi bắt đầu
 
-Docker Desktop hoặc Docker Engine cùng plugin Compose v2. Kiểm tra daemon và plugin bằng `docker version`, `docker compose version`. Cổng **5678** cần trống. Trên Windows dùng chế độ Linux container của Docker; có thể chạy trong WSL2.
+Docker Engine/Desktop đang chạy ở chế độ Linux containers; `docker version` cần có Server, `docker compose version` có v2. Cổng5678 trống. Dùng workspace mới ngoài repository handbook, không đưa credential production vào lab. Không cần cài Node hoặc n8n toàn cục trên host.
 
 ## Lệnh khởi tạo
 
-Trong thư mục cha dành cho thực hành:
+Tại thư mục cha thực hành:
 
 ```sh
 mkdir n8n-local
 cd n8n-local
 mkdir workflows
+mkdir backups
 ```
+
+Mọi lệnh Compose dưới đây chạy tại `n8n-local`.
 
 ## Cấu hình môi trường
 
 Tạo `.env.example`:
 
 ```dotenv
-# Tag biến động cho lần chạy đầu; sau đó thay bằng phiên bản cụ thể đã rà soát.
-N8N_VERSION=latest
+N8N_VERSION=2.46.6
 GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
+N8N_ENCRYPTION_KEY=replace-with-long-random-encryption-key
+N8N_RUNNERS_AUTH_TOKEN=replace-with-different-long-random-token
 ```
 
-Sao chép thành `.env` (Bash: `cp .env.example .env`; PowerShell: `Copy-Item .env.example .env`). Thêm dòng `.env` vào `.gitignore`. Ví dụ không dùng API key bên ngoài. n8n tạo thông tin mã hóa khi chạy lần đầu và lưu trong volume dữ liệu.
+Sao chép thành `.env` và thay hai placeholder bằng hai chuỗi ngẫu nhiên khác nhau. Có thể dùng trình quản lý mật khẩu tạo chuỗi dài ngẫu nhiên; lưu khóa mã hóa an toàn cùng kế hoạch backup, không đổi tùy tiện sau khi tạo credential. Không dán giá trị thật vào Git, ảnh chụp hoặc log hỗ trợ.
+
+```bash
+# Bash
+cp .env.example .env
+```
+
+```powershell
+# PowerShell
+Copy-Item .env.example .env
+```
+
+Tạo `.gitignore`:
+
+```text
+.env
+.env.*
+!.env.example
+backups/
+```
+
+Export workflow có thể chứa pinned data/URL/header nhạy cảm; rà soát cả `workflows/` trước commit. `.env` là cấu hình local không mã hóa, không phải secret manager.
 
 ## Cấu trúc thư mục đề xuất
 
@@ -49,90 +76,144 @@ Sao chép thành `.env` (Bash: `cp .env.example .env`; PowerShell: `Copy-Item .e
 n8n-local/
 ├── compose.yaml
 ├── .env.example
-├── .env          # Không đưa vào Git
+├── .env                 # Ngoài Git
 ├── .gitignore
-└── workflows/   # Bản xuất đã rà soát, không phải backup đầy đủ
+├── workflows/           # Export thực tế đã rà soát
+└── backups/             # Bản backup riêng, không phải chỉ workflow JSON
 ```
 
 ## Các bước thực hiện
 
-### 1. Định nghĩa dịch vụ
+### 1. Khai báo editor và runner
 
 Tạo `compose.yaml`:
 
 ```yaml
+name: n8n-local
 services:
   n8n:
-    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:?Set N8N_VERSION}
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:?Cần đặt N8N_VERSION}
     restart: unless-stopped
     ports:
       - "127.0.0.1:5678:5678"
     environment:
-      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-Etc/UTC}
-      TZ: ${GENERIC_TIMEZONE:-Etc/UTC}
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-Asia/Ho_Chi_Minh}
+      TZ: ${GENERIC_TIMEZONE:-Asia/Ho_Chi_Minh}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       N8N_SECURE_COOKIE: "false"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Cần đặt N8N_ENCRYPTION_KEY}
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN:?Cần đặt token runner}
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_MAX_AGE: "168"
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./workflows:/exports
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5678/healthz').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  runners:
+    image: n8nio/runners:${N8N_VERSION:?Cần đặt N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN:?Cần đặt token runner}
+    depends_on:
+      n8n:
+        condition: service_healthy
 volumes:
   n8n_data:
 ```
 
-`N8N_SECURE_COOKIE=false` phục vụ bài thực hành HTTP chỉ mở trên **loopback**. Khi triển khai từ xa, dùng HTTPS và bật secure cookie. Không mở ví dụ này ra mọi địa chỉ mạng bằng cách thay host binding.
+Cổng5678 chỉ loopback; broker5679 không publish. `N8N_SECURE_COOKIE=false` chỉ dùng HTTP local, không dùng cho remote. `N8N_ENCRYPTION_KEY` phải ổn định; volume vẫn cần dù đặt key tường minh. `EXECUTIONS_DATA_MAX_AGE=168` là retention theo giờ, không đảm bảo mọi Waiting execution bị xóa theo cùng cách; kiểm tra chính sách execution thực tế.
 
-### 2. Khởi chạy và kiểm tra
+Runner/n8n phải cùng tag. n8n2.x đã bật runner mặc định, không cần thêm biến `N8N_RUNNERS_ENABLED` cũ; external mode tách môi trường Code khỏi main process. Không truyền DB password/key mã hóa cho runners, không mount Docker socket. Production cần thêm hardening runner theo [tài liệu task runners](https://docs.n8n.io/hosting/configuration/task-runners/), kiểm soát quyền editor và network.
 
-Tại `n8n-local`:
+### 2. Khởi động
 
 ```sh
-docker compose config
+docker compose config --quiet
 docker compose pull
 docker compose up -d
 docker compose ps
-docker compose logs --tail=100 n8n
+docker compose logs --tail=100 n8n runners
+docker compose exec n8n n8n --version
 ```
 
-Chờ khởi động xong. Mở `http://localhost:5678` và thiết lập tài khoản chủ sở hữu. Ghi phiên bản thực tế bằng `docker compose exec n8n n8n --version`. Thay `latest` trong `.env` trên máy bằng đúng phiên bản ổn định đó để các lần chạy sau có thể tái lập.
+Mong đợi version2.46.6, n8n healthy, runner kết nối broker. Mở `http://127.0.0.1:5678`, thiết lập owner với mật khẩu riêng. Không dùng biến Basic Auth cũ để thay quy trình user management.
 
-### 3. Tạo workflow
+### 3. Tạo workflow và kiểm tra Code
 
-Tạo và lưu **Manual Trigger → Edit Fields (Set)** với trường chuỗi `message` có giá trị `Hello handbook`. Chạy và xem đầu ra node cuối. Xem [khởi tạo n8n](/technologies/n8n/#khoi-tao-du-an) để theo dõi các bước trong giao diện. Tên và nút lưu/publish có thể khác giữa các phiên bản.
+Tạo `LAB / Workflow đầu tiên`: Manual Trigger → Edit Fields, String `message` = `Xin chào handbook`, chỉ giữ field đặt. Execute, mong đợi một item. Thêm Code, mode **Run Once for All Items**:
 
-### 4. Kiểm tra dữ liệu lưu bền vững
+```js
+return $input.all().map((item, index) => ({
+  json: { message: item.json.message, checked: true },
+  pairedItem: { item: index }
+}));
+```
+
+Mong đợi output có `checked:true`. Nếu Code không chạy, đọc log runner và token/version/broker network trước; UI mở được không chứng minh runner hoạt động. Bài dùng JavaScript, không yêu cầu Python/native module.
+
+### 4. Kiểm tra lưu trữ
+
+Lưu workflow, rồi:
 
 ```sh
 docker compose stop
 docker compose start
 ```
 
-Mở lại trình biên tập và kiểm tra workflow đã lưu. Named volume độc lập với container. `docker compose down` cũng giữ volume theo mặc định. **Cảnh báo:** `down -v` xóa volume và dữ liệu trong đó; không dùng trong quy trình này.
+Mở editor, workflow/tài khoản phải còn. `docker compose down` cũng giữ named volume theo mặc định. Đổi project name có thể tạo volume khác; không kết luận mất dữ liệu trước khi kiểm tra `docker volume ls`.
 
 ## Chạy và kiểm tra
 
+Bash dùng `curl`, PowerShell dùng `curl.exe`:
+
 ```sh
-curl http://localhost:5678/healthz
-docker compose exec n8n n8n --version
+curl -i http://127.0.0.1:5678/healthz
 docker compose ps
+docker compose exec n8n n8n --version
 ```
 
-Trên Windows dùng `curl.exe`. Mong đợi HTTP thành công từ `/healthz`, số phiên bản và container đang chạy. Workflow cần trả thông điệp và còn sau stop/start. Dừng dịch vụ bằng `docker compose stop` khi xong.
+Health200 không xác nhận credential ngoài hay workflow đúng; phải chạy bài Manual/Edit Fields/Code và stop/start. Sau đó làm [bài lịch](/project-guides/n8n-scheduled-api). Manual-only workflow không cần publish để chạy thủ công.
+
+### Export và import thực tế
+
+Editor: menu workflow → Download/Export JSON theo UI → rà nội dung → lưu trong `workflows/`. Muốn CLI export toàn bộ workflow lab:
+
+```sh
+docker compose exec n8n n8n export:workflow --all --output=/exports/workflows.json
+```
+
+Đây không phải backup credential/instance. Import qua editor **Import from File** trong workflow mới ở môi trường test, map credential lại, kiểm tra trigger và chạy thủ công trước publish. CLI import có thể giữ IDs và ghi đè workflow cũ; không dùng bừa trên production. Xem [CLI](https://docs.n8n.io/hosting/cli-commands/).
 
 ## Lỗi khởi tạo thường gặp
 
-| Vấn đề | Kiểm tra và sửa |
-| --- | --- |
-| Container khởi động lại liên tục | Đọc log; kiểm tra image và kiến trúc được hỗ trợ |
-| Không có quyền với đường dẫn dữ liệu | Dùng named volume như ví dụ thay vì mount thư mục máy tùy ý |
-| Trình biên tập cảnh báo cookie | Kiểm tra URL loopback và cấu hình local; dùng HTTPS khi truy cập từ xa |
-| Workflow biến mất | Kiểm tra tên dự án Compose và volume; tránh tạo nhầm dự án khác |
-| Phiên bản thay đổi ngoài dự kiến | Thay tag biến động bằng phiên bản cụ thể đã rà soát |
+| Vấn đề | Kiểm tra/sửa | Xác nhận |
+| --- | --- | --- |
+| Không kết nối Engine | Khởi động Docker/context đúng | `docker version` có Server |
+| Cổng5678 bận | Đổi host port, ví dụ5679:5678 nhưng không publish broker | Gọi URL cổng mới; phân biệt host port với broker container |
+| Runner không kết nối | Token cùng giá trị, cùng version, URI `http://n8n:5679` | Log runner và chạy Code |
+| Cảnh báo cookie | HTTP local/cookie không khớp hoặc vào bằng IP remote | Dùng loopback như bài; remote dùng HTTPS |
+| Credential không giải mã | Key khác với lúc tạo hoặc volume nhầm | Khôi phục key/volume tương ứng, test credential đọc |
+| Source export không ghi được | Quyền bind mount `workflows` trên host | Phân quyền cho UID container đúng, không chmod777 toàn cây |
 
 ## Kết quả mong đợi
 
-- [ ] Trình biên tập mở được và đã thiết lập chủ sở hữu.
-- [ ] Workflow thủ công đã lưu chạy được mà không cần credential bên ngoài.
-- [ ] Workflow và tài khoản còn sau khi khởi động lại.
-- [ ] Đã ghi lại phiên bản cài đặt.
+- [ ] Owner đăng nhập được, version đã ghi rõ.
+- [ ] Manual/Edit Fields/Code trả dữ liệu đúng, runner đã kiểm tra.
+- [ ] Workflow/tài khoản còn sau stop/start.
+- [ ] Có export thực tế đã rà nhạy cảm và hiểu đây chưa phải full backup.
 
-Trước khi nâng cấp, dừng instance, backup nhất quán toàn bộ volume và thử khôi phục vào instance riêng. Giữ thông tin mã hóa cùng cơ sở dữ liệu. Production cần kế hoạch PostgreSQL, TLS, URL/proxy, bảo vệ credential, thời hạn lưu dữ liệu và cô lập runner. Nếu cần n8n Assistant sandbox tùy chọn, đọc hướng dẫn cài đặt chính thức vì cần dịch vụ bổ sung.
-
-**Nguồn chính thức:** [Cài bằng Compose](https://docs.n8n.io/deploy/host-n8n/install-options/install-using-docker-compose) · [Biến triển khai](https://docs.n8n.io/hosting/configuration/environment-variables/deployment/) · [Ví dụ hosting n8n](https://github.com/n8n-io/n8n-hosting).
+Dừng bằng `docker compose stop`, hoặc `docker compose down` để xóa container/network và giữ volume. **Không chạy `down -v`: lệnh này xóa volume chứa workflow, user, credential và execution.** Backup SQLite cần dừng writer và sao chép nhất quán toàn bộ dữ liệu cùng khóa; hướng dẫn quản lý backup/VPS/PostgreSQL ở [self-hosting](/technologies/n8n/self-hosting).

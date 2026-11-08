@@ -1,6 +1,6 @@
 ---
 title: Hướng dẫn dự án
-version: Bảy lộ trình thực hành · Handbook 1.0
+version: Mười lộ trình thực hành · Handbook 1.0
 ---
 
 # Thực hành xây dựng dự án
@@ -15,7 +15,10 @@ Mỗi bài bắt đầu trong thư mục mới, giải thích môi trường và
 | [Docker bài 1: Nginx và HTML](./docker-nginx) | HTML tự viết qua bind mount, port và log | 25 phút |
 | [Docker bài 2: Express REST API](./docker-nodejs) | Image non-root, REST API, healthcheck và vòng đời cập nhật | 45 phút |
 | [Docker bài 3: Express + PostgreSQL](./docker-express-postgresql) | DNS, mạng riêng, dữ liệu bền vững, backup và restore thử | 90 phút |
-| [Tự chạy n8n bằng Docker Compose](./n8n-compose) | Trình biên tập workflow với dữ liệu lưu bền vững | 15 phút |
+| [Cài n8n local bằng Docker Compose](./n8n-compose) | Editor, SQLite và external task runner | 30 phút |
+| [n8n bài 1: Lịch và API công khai](./n8n-scheduled-api) | Lấy API, xử lý dữ liệu và điều kiện theo lịch | 40 phút |
+| [n8n bài 2: Webhook + PostgreSQL](./n8n-webhook-postgres) | Validation, SQL atomic và HTTP response | 90 phút |
+| [n8n bài 3: AI Agent và phê duyệt](./n8n-ai-agent) | Tool chỉ đọc, xác thực draft và duyệt trước hành động | 90 phút |
 
 ## Danh sách kiểm tra chung
 

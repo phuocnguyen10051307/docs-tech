@@ -37,7 +37,7 @@ Dữ liệu lỗ hổng thay đổi theo thời gian; chạy `npm audit` trướ
 | Bài database | `pg@8`, `postgres:17`, đường dẫn volume phiên bản 17 |
 | Bài Next.js | create-next-app với App Router; ESLint CLI được cài |
 | Docker | Compose v2 (`docker compose`), không dùng khóa `version` cũ |
-| n8n trên máy | Lần đầu dùng tag `latest` biến động; ghi và ghim phiên bản thực tế |
+| n8n trên máy | Mốc thực hành `2.46.6`, runner cùng tag; đối chiếu release/migration trước nâng cấp, xem [phạm vi phiên bản](/technologies/n8n/) |
 | Prisma | Trang đang biên soạn dẫn tài liệu theo major; không hướng dẫn cài bản RC |
 
 Lệnh scaffold là điểm bắt đầu, không bảo đảm mọi phiên bản tương lai có cùng hành vi. Công cụ mới có thể đổi câu hỏi, yêu cầu hoặc file. Đọc ghi chú migration chính thức thay vì bỏ qua chẩn đoán.

@@ -9,7 +9,7 @@ export const technologies: { slug: string; name: string; symbol: string; color: 
   { slug: 'docker', name: 'Docker', symbol: '▤', color: '#087fca', category: 'Hạ tầng', description: 'Từ kiến trúc và CLI đến Dockerfile, Compose, dữ liệu và vận hành.' },
   { slug: 'postgresql', name: 'PostgreSQL', symbol: 'PG', color: '#416b94', category: 'Hạ tầng', description: 'Dữ liệu quan hệ, SQL và lưu trữ bền vững trên máy.', starter: true },
   { slug: 'prisma', name: 'Prisma', symbol: '◭', color: '#546b9b', category: 'Backend', description: 'Bước đầu về schema, migration và database client có kiểu.', starter: true },
-  { slug: 'n8n', name: 'n8n', symbol: 'n8n', color: '#cf5268', category: 'Quy trình', description: 'Kết nối công cụ bằng workflow chạy trên máy của bạn.' },
+  { slug: 'n8n', name: 'n8n', symbol: 'n8n', color: '#cf5268', category: 'Quy trình', description: 'Workflow, API, dữ liệu, AI Agent và vận hành từ cơ bản đến trung cấp.' },
   { slug: 'git', name: 'Git & GitHub', symbol: '⎇', color: '#d85536', category: 'Quy trình', description: 'Branch, commit, remote và quy trình Git hằng ngày.', starter: true }
 ]
 
@@ -20,5 +20,8 @@ export const projectGuides = [
   { slug: 'docker-nginx', title: 'Docker bài 1: Nginx và HTML', detail: 'Phục vụ HTML tự viết, hiểu port, bind mount và log.', time: '25 phút', tags: 'Docker · Cơ bản' },
   { slug: 'docker-nodejs', title: 'Docker bài 2: Express REST API', detail: 'Build API non-root, dùng lockfile và kiểm tra health.', time: '45 phút', tags: 'Docker · Trung cấp' },
   { slug: 'docker-express-postgresql', title: 'Docker bài 3: Express + PostgreSQL', detail: 'Compose, DNS, volume, readiness và khôi phục backup thử.', time: '90 phút', tags: 'Docker · Trung cấp' },
-  { slug: 'n8n-compose', title: 'Tự chạy n8n bằng Docker Compose', detail: 'Môi trường workflow với dữ liệu lưu bền vững.', time: '15 phút', tags: 'Quy trình · Trung cấp' }
+  { slug: 'n8n-compose', title: 'Cài n8n local bằng Docker Compose', detail: 'Editor, SQLite, external runner và dữ liệu lưu bền vững.', time: '30 phút', tags: 'n8n · Cài đặt' },
+  { slug: 'n8n-scheduled-api', title: 'n8n bài 1: Lịch và API công khai', detail: 'Lấy dữ liệu, chuẩn hóa, điều kiện và kết quả kiểm tra được.', time: '40 phút', tags: 'n8n · Cơ bản' },
+  { slug: 'n8n-webhook-postgres', title: 'n8n bài 2: Webhook + PostgreSQL', detail: 'Validation, API, SQL atomic, chống trùng và response có cấu trúc.', time: '90 phút', tags: 'n8n · Trung cấp' },
+  { slug: 'n8n-ai-agent', title: 'n8n bài 3: AI Agent và phê duyệt', detail: 'Tool chỉ đọc, kiểm tra draft và duyệt trước khi gửi.', time: '90 phút', tags: 'n8n · Trung cấp' }
 ]
